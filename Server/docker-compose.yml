@@ -1,0 +1,17 @@
+services:
+  db:
+    image: postgres:16
+    container_name: local_postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "1234:5432"
+    volumes:
+      - ./db-init:/docker-entrypoint-initdb.d:Z
+      - postgres_data:/var/lib/postgresql/data:Z
+    network_mode: bridge
+
+volumes:
+  postgres_data:
