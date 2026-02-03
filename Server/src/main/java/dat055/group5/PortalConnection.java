@@ -1,6 +1,7 @@
 package dat055.group5;
 
 import java.sql.*; // JDBC stuff.
+import java.time.Instant;
 import java.util.Properties;
 
 public class PortalConnection {
@@ -42,6 +43,22 @@ public class PortalConnection {
         props.setProperty("user", user);
         props.setProperty("password", pwd);
         conn = DriverManager.getConnection(db, props);
+    }
+
+    public void addMessage(Instant time, String sender_name, int channel_id, String content, String image_url){
+        String sql= "INSERT INTO Messages VALUES(?, ?, ?, ?, ?)";
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setTimestamp(1, Timestamp.from(time));
+            ps.setString(2, sender_name);
+            ps.setInt(3, channel_id);
+            ps.setString(4, content);
+            ps.setString(5, image_url);
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            getError(e);
+            e.printStackTrace();
+        }
     }
 
     public void printMessages() {
