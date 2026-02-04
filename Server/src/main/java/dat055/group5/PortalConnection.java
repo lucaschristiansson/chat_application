@@ -4,6 +4,9 @@ import java.sql.*; // JDBC stuff.
 import java.time.Instant;
 import java.util.Properties;
 
+/**
+ * 
+ */
 public class PortalConnection {
 
     public static String getDbPassword() {

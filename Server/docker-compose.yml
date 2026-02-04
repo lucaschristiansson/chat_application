@@ -9,8 +9,8 @@ services:
     ports:
       - "1234:5432"
     volumes:
-      - ./db-init:/docker-entrypoint-initdb.d:Z
-      - postgres_data:/var/lib/postgresql/data:Z
+      - ./db-init:/docker-entrypoint-initdb.d
+      - postgres_data:/var/lib/postgresql/data
     network_mode: bridge
 
 volumes:
