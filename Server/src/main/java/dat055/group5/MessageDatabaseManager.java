@@ -5,11 +5,11 @@ import java.time.Instant;
 
 import static dat055.group5.PortalConnection.getError;
 
-public class MessageManager {
+public class MessageDatabaseManager {
     private final Driver driver;
-    private Connection connection;
+    private final Connection connection;
 
-    public MessageManager(Driver driver){
+    public MessageDatabaseManager(Driver driver){
         this.driver = driver;
         this.connection = driver.getPortalConnection().getConnection();
     }

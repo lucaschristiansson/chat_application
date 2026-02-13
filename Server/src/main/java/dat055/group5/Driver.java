@@ -4,8 +4,9 @@ import java.sql.SQLException;
 
 public class Driver {
     private final PortalConnection portalConnection;
-    private final ChannelManager channelManager;
-    private final MessageManager messageManager;
+    private final ChannelDatabaseManager channelDatabaseManager;
+    private final MessageDatabaseManager messageDatabaseManager;
+    private final UserDatabaseManager userDatabaseManager;
 
     public Driver() {
         try {
@@ -13,20 +14,25 @@ public class Driver {
         } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
-        this.channelManager = new ChannelManager(this);
-        this.messageManager = new MessageManager(this);
+        this.channelDatabaseManager = new ChannelDatabaseManager(this);
+        this.messageDatabaseManager = new MessageDatabaseManager(this);
+        this.userDatabaseManager = new UserDatabaseManager(this);
     }
 
     void main(){
-        messageManager.addMessage("user1", 1, "yello", null);
-        messageManager.printMessages();
+        messageDatabaseManager.addMessage("user1", 1, "yello", null);
+        messageDatabaseManager.printMessages();
     }
 
     public PortalConnection getPortalConnection() {
         return portalConnection;
     }
 
-    public ChannelManager getChannelManager() {
-        return channelManager;
+    public ChannelDatabaseManager getChannelDatabaseManager() {
+        return channelDatabaseManager;
+    }
+
+    public UserDatabaseManager getUserDatabaseManager() {
+        return userDatabaseManager;
     }
 }
