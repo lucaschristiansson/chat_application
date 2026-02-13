@@ -7,13 +7,7 @@ import java.time.Instant;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     static void main() {
-        try {
-            PortalConnection db = new PortalConnection();
-            db.addMessage(Instant.now(), "user1", 2, "tellooo", "gulp.png");
-            db.printMessages();
-
-        } catch (SQLException | ClassNotFoundException | RuntimeException e) {
-            System.err.println(e.getMessage());
-        }
+        Driver driver = new Driver();
+        driver.main();
     }
 }
