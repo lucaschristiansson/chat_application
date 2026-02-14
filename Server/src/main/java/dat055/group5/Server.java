@@ -6,9 +6,9 @@ import java.io.*;
 public class Server {
 
     // Initialize socket and input stream
-    private Socket s = null;
-    private ServerSocket ss = null;
-    private DataInputStream in = null;
+    private Socket socket = null;
+    private ServerSocket serverSocket = null;
+    private DataInputStream inputStream = null;
 
     // Constructor with port
     public Server(int port) {
@@ -16,27 +16,27 @@ public class Server {
         // Starts server and waits for a connection
         try
         {
-            ss = new ServerSocket(port);
+            serverSocket = new ServerSocket(port);
             System.out.println("Server started");
 
             System.out.println("Waiting for a client ...");
 
-            s = ss.accept();
+            socket = serverSocket.accept();
             System.out.println("Client accepted");
 
             // Takes input from the client socket
-            in = new DataInputStream(
-                    new BufferedInputStream(s.getInputStream()));
+            inputStream = new DataInputStream(
+                    new BufferedInputStream(socket.getInputStream()));
 
-            String m = "";
+            String message = "";
 
             // Reads message from client until "Over" is sent
-            while (!m.equals("Over"))
+            while (!message.equals("Over"))
             {
                 try
                 {
-                    m = in.readUTF();
-                    System.out.println(m);
+                    message = inputStream.readUTF();
+                    System.out.println(message);
 
                 }
                 catch(IOException i)
@@ -47,12 +47,12 @@ public class Server {
             System.out.println("Closing connection");
 
             // Close connection
-            s.close();
-            in.close();
+            socket.close();
+            inputStream.close();
         }
-        catch(IOException i)
+        catch(IOException e)
         {
-            System.out.println(i);
+            System.out.println(e);
         }
     }
 

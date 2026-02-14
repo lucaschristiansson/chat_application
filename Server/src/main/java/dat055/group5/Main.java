@@ -17,7 +17,7 @@ public class Main {
             System.err.println(e.getMessage());
         }
         try {
-            Server s = new Server(5000);
+            Server server = new Server(5000);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
