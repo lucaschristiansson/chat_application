@@ -4,6 +4,9 @@ import java.sql.*; // JDBC stuff.
 import java.time.Instant;
 import java.util.Properties;
 
+/**
+ * 
+ */
 public class PortalConnection {
     private final Connection connection;
     private final Driver driver;

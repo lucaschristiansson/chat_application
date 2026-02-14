@@ -9,5 +9,12 @@ public class Main {
     static void main() {
         Driver driver = new Driver();
         driver.main();
+        /*
+        try {
+            Server server = new Server(5000);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+         */
     }
 }
