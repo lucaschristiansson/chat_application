@@ -7,7 +7,7 @@ public class Launcher {
         Application.launch(HelloApplication.class, args);
         // address and port are examples
         System.out.println("main runs");
-        Client c = new Client("172.31.176.1", 5000);
+        Client client = new Client("172.31.176.1", 5000);
 
     }
 

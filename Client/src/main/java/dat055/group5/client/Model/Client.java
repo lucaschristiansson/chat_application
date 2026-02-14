@@ -4,48 +4,48 @@ import java.net.*;
 
 public class Client {
     //initialize socket and input/output streams
-    private Socket s = null;
-    private BufferedReader d = null;
-    private DataOutputStream out = null;
+    private Socket socket = null;
+    private BufferedReader bufferReader = null;
+    private DataOutputStream outputStream = null;
 
     public Client(String addr, int port){
         //Establish a connection
         try {
-            s = new Socket(addr, port);
+            socket = new Socket(addr, port);
             System.out.println("Connected");
 
             // Takes input from terminal
-            d = new BufferedReader(new InputStreamReader(System.in));
+            bufferReader = new BufferedReader(new InputStreamReader(System.in));
 
             // Sends output to the socket
-            out = new DataOutputStream(s.getOutputStream());
-        } catch (IOException i) {
-            System.out.println(i);
+            outputStream = new DataOutputStream(socket.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
             return;
         }
 
         //String to read message from input
-        String m = "";
+        String message = "";
 
         // Keep reading until "Over" is input
-        while (!m.equals("Over")) {
+        while (!message.equals("Over")) {
             try {
-                m = d.readLine();
-                out.writeUTF(m);
+                message = bufferReader.readLine();
+                outputStream.writeUTF(message);
             }
             catch (IOException e) {
-                System.out.println(e);
+                e.printStackTrace();
                 break;
             }
         }
 
         //close the connection
         try{
-            d.close();
-            out.close();
-            s.close();
+            bufferReader.close();
+            outputStream.close();
+            socket.close();
         } catch (IOException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
 }
