@@ -11,6 +11,12 @@ public class ChannelDatabaseManager {
         this.connection = driver.getPortalConnection().getConnection();
     }
 
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 
 }

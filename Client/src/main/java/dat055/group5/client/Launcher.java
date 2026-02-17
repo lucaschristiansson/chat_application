@@ -4,7 +4,7 @@ import javafx.application.Application;
 
 public class Launcher {
     public static void main(String[] args) {
-        Application.launch(HelloApplication.class, args);
+        //Application.launch(HelloApplication.class, args);
         // address and port are examples
         System.out.println("main runs");
         Client client = new Client("172.31.176.1", 5000);

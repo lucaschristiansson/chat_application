@@ -7,14 +7,18 @@ import java.time.Instant;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     static void main() {
+        /*
         Driver driver = new Driver();
         driver.main();
-        /*
+        */
+
         try {
-            Server server = new Server(5000);
+            Server server = new Server();
+            server.start(5000);
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-         */
+
     }
 }
