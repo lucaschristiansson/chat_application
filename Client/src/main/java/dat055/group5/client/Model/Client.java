@@ -6,7 +6,7 @@ public class Client {
     //initialize socket and input/output streams
     private Socket socket = null;
     private BufferedReader bufferReader = null;
-    private DataOutputStream outputStream = null;
+    private ObjectOutputStream outputStream = null;
 
     public Client(String addr, int port){
         //Establish a connection
@@ -18,7 +18,8 @@ public class Client {
             bufferReader = new BufferedReader(new InputStreamReader(System.in));
 
             // Sends output to the socket
-            outputStream = new DataOutputStream(socket.getOutputStream());
+
+            outputStream = new ObjectOutputStream(socket.getOutputStream());
         } catch (IOException e) {
             e.printStackTrace();
             return;

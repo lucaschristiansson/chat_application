@@ -3,6 +3,8 @@ package dat055.group5;
 import java.net.*;
 import java.io.*;
 
+import dat055.group5.export.NetworkPackage;
+
 public class Server {
 
     // Initialize socket and input stream
@@ -38,10 +40,16 @@ public class Server {
 
         @Override
         public void run() {
+            System.out.println("ClientHandler runs");
             while (clientSocket.isConnected()) {
                 NetworkPackage networkPackage = null;
                 try {
-                    networkPackage = (NetworkPackage) input.readObject();
+                    synchronized (System.out) {
+                        String message = ((String) input.readObject());
+                        System.out.println(message);
+                        System.out.flush();
+                    }
+                    //networkPackage = (NetworkPackage) input.readObject();
 
                     /*switch (networkPackage.getType()) {
                         case "addUserToChannel": {
