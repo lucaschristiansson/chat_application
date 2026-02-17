@@ -46,7 +46,7 @@ public class Server {
                 try {
                     networkPackage = (NetworkPackage) input.readObject();
 
-                    /*switch (networkPackage.getType()) {
+                    switch (networkPackage.getType()) {
                         case "addUserToChannel": {
                             try{
                                 //
@@ -57,11 +57,11 @@ public class Server {
                             }
                         }
                         case "addUser":{
-                            User user = networkPackage.getData();
-                            userDatabaseManager.addUser();
+                            User user = (User) networkPackage.getData();
+                            userDatabaseManager.addUser(user);
                         }
 
-                    }*/
+                    }
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 } catch (ClassNotFoundException e) {

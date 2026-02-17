@@ -17,7 +17,7 @@ public class PortalConnection {
 
     private PortalConnection(String db, String user, String pwd, Driver driver) throws SQLException, ClassNotFoundException{
 
-        Class.forName("org.postgresql.Driver");
+       // Class.forName("org.postgresql.Driver");
         Properties props = new Properties();
         props.setProperty("user", user);
         props.setProperty("password", pwd);
