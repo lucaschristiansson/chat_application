@@ -34,40 +34,6 @@ public class UserDatabaseManager {
         }
         return users;
     }
-    public List<String> getUsersInChannel(String channel_id){
-        String sql = "SELECT * FROM UsersInChannel UC JOIN Channels C ON UC.channel = C.id WHERE UC.channel=?";
-
-        List<String> users = new ArrayList<>();
-
-        try(PreparedStatement ps = connection.prepareStatement(sql)){
-            ps.setString(1, user.getUsername());
-            ps.setString(2, user.getPassword());
-
-            try(ResultSet rs = ps.executeQuery()){
-                if(rs.next()){
-                    System.out.println("Login was successful! User exists");
-                }else{
-                    System.out.println("Invalid username or password");
-                }
-            }
-
-        } catch (SQLException e) {
-            getError(e);
-            e.printStackTrace();
-        }
-
-        try(Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery(sql)){
-            while(rs.next()){
-                users.add(rs.getString("username"));
-            }
-
-        } catch (SQLException e) {
-            getError(e);
-            e.printStackTrace();
-        }
-        return users;
-    }
 
 
     public void addUser(User user){
