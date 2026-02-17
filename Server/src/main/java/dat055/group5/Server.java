@@ -15,6 +15,8 @@ public class Server {
         System.out.println("Server started on port " + port);
         while (true) {
             new ClientHandler(serverSocket.accept()).start();
+            System.out.println("relooping! thus its not blocking in while loop");
+        }
     }
 
     public void stop() throws IOException {
@@ -38,14 +40,14 @@ public class Server {
             }
         }
 
-        @Override
+        //@Override
         public void run() {
             System.out.println("ClientHandler runs");
             while (clientSocket.isConnected()) {
                 NetworkPackage networkPackage = null;
                 try {
+                    String message = ((String) input.readObject());
                     synchronized (System.out) {
-                        String message = ((String) input.readObject());
                         System.out.println(message);
                         System.out.flush();
                     }
@@ -68,11 +70,18 @@ public class Server {
 
                     }*/
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    //dont care
                 } catch (ClassNotFoundException e) {
                     throw new RuntimeException(e);
                 }
 
+            }
+            //after while
+            try{
+                //input.close();
+                clientSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
 
