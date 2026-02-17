@@ -31,7 +31,7 @@ public class Client {
         while (!message.equals("Over")) {
             try {
                 message = bufferReader.readLine();
-                outputStream.writeUTF(message);
+                outputStream.writeObject(message);
             }
             catch (IOException e) {
                 e.printStackTrace();

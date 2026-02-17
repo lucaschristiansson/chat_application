@@ -1,7 +1,5 @@
 package dat055.group5;
 
-import dat055.group5.export.User;
-
 import java.net.*;
 import java.io.*;
 
@@ -41,7 +39,6 @@ public class Server {
         @Override
         public void run() {
             while (clientSocket.isConnected()) {
-
                 NetworkPackage networkPackage = null;
                 try {
                     networkPackage = (NetworkPackage) input.readObject();

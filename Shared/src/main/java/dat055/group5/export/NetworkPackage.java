@@ -1,4 +1,4 @@
-package dat055.group5;
+package dat055.group5.export;
 
 public class NetworkPackage {
     String type;
