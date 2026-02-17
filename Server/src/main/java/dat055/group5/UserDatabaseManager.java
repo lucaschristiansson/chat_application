@@ -1,6 +1,12 @@
 package dat055.group5;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import dat055.group5.export.User;
+
+import static dat055.group5.PortalConnection.getError;
 
 public class UserDatabaseManager {
     private final Driver driver;
