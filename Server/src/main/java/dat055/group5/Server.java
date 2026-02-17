@@ -1,5 +1,8 @@
 package dat055.group5;
 
+import dat055.group5.export.AddUserToChannel;
+import dat055.group5.export.Channel;
+import dat055.group5.export.Message;
 import dat055.group5.export.User;
 
 import java.net.*;
@@ -47,14 +50,9 @@ public class Server {
                     networkPackage = (NetworkPackage) input.readObject();
 
                     switch (networkPackage.getType()) {
-                        case "addUserToChannel": {
-                            try{
-                                //
-                                User userData = (User) networkPackage.data;
-                                userDatabaseManager.addUser(userData);
-                            } catch(Exception e){
-                                e.printStackTrace();
-                            }
+                        case "CreateChannel" : {
+                            Channel channel = (Channel) networkPackage.getData();
+                            channelDatabaseManager.CreateChannel(channel);
                         }
                         case "CreateUser":{
                             User user = (User) networkPackage.getData();
@@ -113,31 +111,3 @@ public class Server {
 
     }
 }
-
-//README
-// DETTA SKA ALLTSÅ EVENTUELLT LIGGA I SHARED SÅ ATT VI KAN FORTFARANDE SKICKA OBJEKT AV ALLT I NETWORKPKG
-//SÅ EN SÅNHÄR KLASS FÖR ALLA CASES SOM INNEFATTAR FLERA KLASSER
-//VAD TRO NI MACUS O EDWINZ?
-// i aint reading allat
-//TL:DR
-// Shit got crazy
- /*
-package dat055.group5.shared; // DETTA ÄR FEL???
-
-import java.io.Serializable;
-
-public class ChannelMemberRequest implements Serializable {
-    private int userId;
-    private int channelId;
-
-    public ChannelMemberRequest(int userId, int channelId) {
-        this.userId = userId;
-        this.channelId = channelId;
-    }
-
-    // Getters
-    public int getUserId() { return userId; }
-    public int getChannelId() { return channelId; }
-}
-
-  */

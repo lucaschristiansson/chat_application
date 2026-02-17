@@ -8,15 +8,15 @@ INSERT INTO Channels (id, name) VALUES
     (2, 'Channel2');
 
 INSERT INTO UsersInChannel (username, channel) VALUES
-    ('user1', 1),
-    ('user2', 1),
-    ('user3', 2);
+    (1, 1),
+    (2, 1),
+    (3, 2);
 
 INSERT INTO Messages (time, sender_name, channel_id, content, image_url) VALUES
-    (NOW(), 'user1', 1, 'Hello everyone!', NULL),
+    (CURRENT_TIMESTAMP, 1, 1, 'Hello everyone!', NULL),
 
-    (NOW() + INTERVAL '5 minutes', 'user2', 1, 'Hi user1, how are you?', NULL),
+    (CURRENT_TIMESTAMP + INTERVAL '5 minutes', 2, 1, 'Hi user1, how are you?', NULL),
 
-    (NOW() + INTERVAL '10 minutes', 'user3', 2, 'Check out this cat!', '/uploads/cat.jpg'),
+    (CURRENT_TIMESTAMP + INTERVAL '10 minutes', 3, 2, 'Check out this cat!', '/uploads/cat.jpg'),
 
-    (NOW() + INTERVAL '15 minutes', 'user1', 1, 'I am doing great, thanks!', NULL);
+    (CURRENT_TIMESTAMP + INTERVAL '15 minutes', 1, 1, 'I am doing great, thanks!', NULL);

@@ -1,24 +1,26 @@
 CREATE TABLE Users(
-    username TEXT PRIMARY KEY,
+    userID SERIAL PRIMARY KEY,
+    username TEXT UNIQUE,
     password TEXT NOT NULL
 );
 
 CREATE TABLE Channels(
-    id INT PRIMARY KEY,
-    name TEXT NOT NULL
+    channelID SERIAL PRIMARY KEY,
+    channelName TEXT NOT NULL
 );
 
 CREATE TABLE UsersInChannel(
-    username TEXT REFERENCES Users(username) ON DELETE CASCADE,
-    channel INT REFERENCES Channels(id) ON DELETE CASCADE,
-    PRIMARY KEY (username, channel)
+    userID INT REFERENCES Users(userID) ON DELETE CASCADE,
+    channelID INT REFERENCES Channels(channelID) ON DELETE CASCADE,
+    PRIMARY KEY (userID, channelID)
 );
 
 CREATE TABLE Messages(
-    time TIMESTAMP, /* save time with timzone in mind, convert to UTC */
-    sender_name TEXT REFERENCES Users(username) ON DELETE CASCADE,
-    channel_id INT REFERENCES Channels(id) ON DELETE CASCADE,
-    PRIMARY KEY (time, sender_name, channel_id),
+    messageID SERIAL PRIMARY KEY,
+    messageTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    userID INT REFERENCES Users(userID) ON DELETE CASCADE,
+    channelID INT REFERENCES Channels(channelID) ON DELETE CASCADE,
+    UNIQUE (messageTime, userID, channelID),
 
     content TEXT NOT NULL,
     image_url TEXT

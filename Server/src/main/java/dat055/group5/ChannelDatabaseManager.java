@@ -1,10 +1,13 @@
 package dat055.group5;
 
-import dat055.group5.export.User;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static dat055.group5.PortalConnection.getError;
 
 
 public class ChannelDatabaseManager {
@@ -15,11 +18,11 @@ public class ChannelDatabaseManager {
         this.driver = driver;
         this.connection = driver.getPortalConnection().getConnection();
     }
-    public void AddChannel(int channel_id, String channel_name) {
-        String sql = "INSERT INTO Channels VALUES (?, ?)";
+
+    public void CreateChannel(String channel_name) {//denna ska ta ett channelobjekt
+        String sql = "INSERT INTO Channels VALUES (?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, channel_id);
-            ps.setString(2, channel_name);
+            ps.setString(1, channel_name);
 
             ps.executeUpdate();
         } catch (SQLException e) {
