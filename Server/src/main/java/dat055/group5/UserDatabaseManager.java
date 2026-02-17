@@ -11,6 +11,41 @@ public class UserDatabaseManager {
         this.connection = driver.getPortalConnection().getConnection();
     }
 
+    public void addUser(User user){
+        String sql = "INSERT INTO Users VALUES (?, ?)";
+        try(PreparedStatement ps = connection.prepareStatement(sql)){
+            ps.setString(1, user.getUsername());
+            ps.setString(2, user.getPassword());
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            getError(e);
+            e.printStackTrace();
+        }
+    }
+
+    public void authenticateUser(User user){
+        String sql = "SELECT 1 FROM Users WHERE username =? AND password =?";
+        try(PreparedStatement ps = connection.prepareStatement(sql)){
+            ps.setString(1, user.getUsername());
+            ps.setString(2, user.getPassword());
+
+            try(ResultSet rs = ps.executeQuery()){
+                if(rs.next()){
+                    System.out.println("Login was successful! User exists");
+                }else{
+                    System.out.println("Invalid username or password");
+                }
+            }
+
+
+        } catch (SQLException e) {
+            getError(e);
+            e.printStackTrace();
+        }
+
+    }
+
 
 
 }
