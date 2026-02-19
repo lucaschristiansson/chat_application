@@ -3,21 +3,19 @@ package dat055.group5.export;
 import java.util.List;
 
 public class Channel {
-    String channelID;
-    List<User> users;
-    List<Message> messages;
+    Integer channelID;
+    String channelName;
 
-    public Channel(String channelID, List<User> users, List<Message> message) {
+    public Channel(Integer channelID, String channelName) {
         this.channelID = channelID;
-        this.users = users;
-        this.messages = message;
+        this.channelName = channelName;
     }
 
-    public void addMessage(Message message) {//To server
-        //Code for adding messages to server
+    public Integer getChannelID() {
+        return channelID;
     }
 
-    public void getMessages () { //from server
-        //Code for getting messages from server =
+    public String getChannelName() {
+        return channelName;
     }
 }
