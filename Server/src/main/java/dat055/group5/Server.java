@@ -1,6 +1,6 @@
 package dat055.group5;
 
-import dat055.group5.export.User;
+import dat055.group5.manager.*;
 
 import java.net.*;
 import java.io.*;
