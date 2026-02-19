@@ -1,9 +1,9 @@
 package dat055.group5.export;
 
-import java.io.File;
+import java.io.Serializable;
 import java.time.Instant;
 
-public class Message {
+public class Message implements Serializable {
     Instant timestamp;
     String sender;
     Integer channel;

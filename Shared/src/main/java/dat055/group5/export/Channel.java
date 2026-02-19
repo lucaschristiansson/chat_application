@@ -1,8 +1,8 @@
 package dat055.group5.export;
 
-import java.util.List;
+import java.io.Serializable;
 
-public class Channel {
+public class Channel implements Serializable {
     Integer channelID;
     String channelName;
 
