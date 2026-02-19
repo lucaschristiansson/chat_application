@@ -4,23 +4,23 @@ CREATE TABLE Users(
 );
 
 CREATE TABLE Channels(
-    id INT PRIMARY KEY,
-    name TEXT NOT NULL
+    channelID INT PRIMARY KEY,
+    channelName TEXT NOT NULL
 );
 
 CREATE TABLE UsersInChannel(
     username TEXT REFERENCES Users(username) ON DELETE CASCADE,
-    channel INT REFERENCES Channels(id) ON DELETE CASCADE,
-    PRIMARY KEY (username, channel)
+    channelID INT REFERENCES Channels(channelID) ON DELETE CASCADE,
+    PRIMARY KEY (username, channelID)
 );
 
 CREATE TABLE Messages(
-    time TIMESTAMP, /* save time with timzone in mind, convert to UTC */
-    sender_name TEXT REFERENCES Users(username) ON DELETE CASCADE,
-    channel_id INT REFERENCES Channels(id) ON DELETE CASCADE,
-    PRIMARY KEY (time, sender_name, channel_id),
+    timestamp TIMESTAMP,
+    sender TEXT REFERENCES Users(username) ON DELETE CASCADE,
+    channelID INT REFERENCES Channels(channelID) ON DELETE CASCADE,
+    PRIMARY KEY (timestamp, sender, channelID),
 
     content TEXT NOT NULL,
-    image_url TEXT
+    imagePath TEXT
 
 );
