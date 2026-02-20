@@ -1,6 +1,8 @@
 package dat055.group5.export;
 
-public class NetworkPackage {
+import java.io.Serializable;
+
+public class NetworkPackage implements Serializable {
     String type;
     Object data;
 
