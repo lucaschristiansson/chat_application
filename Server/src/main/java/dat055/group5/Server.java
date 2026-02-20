@@ -13,8 +13,10 @@ public class Server {
     public void start(int port) throws IOException {
         serverSocket = new ServerSocket(port);
         System.out.println("Server started on port " + port);
-        while (true)
+        while (true) {
             new ClientHandler(serverSocket.accept()).start();
+            System.out.println("relooping! thus its not blocking in while loop");
+        }
     }
 
     public void stop() throws IOException {
@@ -46,6 +48,7 @@ public class Server {
 
         @Override
         public void run() {
+            System.out.println("ClientHandler runs");
             while (!clientSocket.isClosed() && clientSocket.isConnected()) {
                 try {
                     NetworkPackage networkPackage = (NetworkPackage) input.readObject();
