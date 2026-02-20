@@ -3,16 +3,16 @@ INSERT INTO Users (username, password) VALUES
     ('user2', 'password2'),
     ('user3', 'password3');
 
-INSERT INTO Channels (channelName) VALUES
+INSERT INTO Channels (channel_name) VALUES
     ('Channel1'),
     ('Channel2');
 
-INSERT INTO UsersInChannel (username, channelID) VALUES
+INSERT INTO UsersInChannel (username, channel_id) VALUES
     ('user1', 1),
     ('user2', 1),
     ('user3', 2);
 
-INSERT INTO Messages (messageTime, username, channelID, content, imagePath) VALUES
+INSERT INTO Messages (message_time, username, channel_id, content, image_path) VALUES
     (CURRENT_TIMESTAMP, 'user1', 1, 'Hello everyone!', NULL),
 
     (CURRENT_TIMESTAMP + INTERVAL '5 minutes', 'user2', 1, 'Hi user1, how are you?', NULL),

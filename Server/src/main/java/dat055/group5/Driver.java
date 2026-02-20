@@ -21,9 +21,6 @@ public class Driver {
         this.userDatabaseManager = new UserDatabaseManager(this);
     }
 
-    void main(){
-    }
-
     public PortalConnection getPortalConnection() {
         return portalConnection;
     }

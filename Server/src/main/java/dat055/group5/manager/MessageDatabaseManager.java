@@ -21,7 +21,7 @@ public class MessageDatabaseManager {
     }
 
     public boolean addMessage(Message message){
-        String sql = "INSERT INTO Messages (timestamp, sender, channelID, content, imagePath) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Messages (message_time, username, channel_id, content, image_path) VALUES (?, ?, ?, ?, ?)";
         try(PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setTimestamp(1, Timestamp.from(message.getTimestamp()));
             ps.setString(2, message.getSender());
@@ -29,8 +29,10 @@ public class MessageDatabaseManager {
             ps.setString(4, message.getContent());
             ps.setString(5, message.getImagePath());
 
-            ps.executeUpdate();
-            return true;
+            if (ps.executeUpdate() > 0) {
+                System.out.println("Message: "+ message.getContent() + " added successfully.");
+                return true;
+            }
         } catch (SQLException e) {
             System.err.println(getError(e));
             e.printStackTrace();
@@ -40,11 +42,11 @@ public class MessageDatabaseManager {
 
     public List<Message> getMessagesByChannel(int channelId) {
         String query =
-                "SELECT M.timestamp, M.sender, M.content, M.imagePath " +
+                "SELECT M.messageTime, M.username, M.content, M.imagePath " +
                 "FROM Messages M " +
-                "NATURAL JOIN Users U" +
+                "NATURAL JOIN Users U " +
                 "WHERE M.channelID = ? " +
-                "ORDER BY M.timestamp ASC";
+                "ORDER BY M.messageTime ASC";
 
         List<Message> messages = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -52,9 +54,9 @@ public class MessageDatabaseManager {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     messages.add(new Message(
-                            rs.getString("sender"),
+                            rs.getString("username"),
                             rs.getString("content"),
-                            rs.getTimestamp("timestamp").toInstant(),
+                            rs.getTimestamp("messageTime").toInstant(),
                             channelId,
                             rs.getString("imagePath")
                     ));
@@ -69,17 +71,17 @@ public class MessageDatabaseManager {
     /* Debug function, might not be used again */
     public void printMessages() {
         String query =
-                "SELECT M.timestamp, M.sender, M.content, M.imagePath, C.channelName " +
+                "SELECT M.messageTime, M.username, M.content, M.imagePath, C.channelName " +
                 "FROM Messages M " +
-                "JOIN Channels C ON M.channelID = C.channelID " +
-                "ORDER BY M.timestamp ASC";
+                "NATURAL JOIN Channels C " +
+                "ORDER BY M.messageTime ASC";
 
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
 
             while (rs.next()) {
-                String time = rs.getString("timestamp");
-                String sender = rs.getString("sender");
+                String time = rs.getString("messageTime");
+                String sender = rs.getString("username");
                 String content = rs.getString("content");
                 String image = rs.getString("imagePath");
                 String channel = rs.getString("channelName");
