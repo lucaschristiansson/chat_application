@@ -1,16 +1,13 @@
 package dat055.group5;
 
-import dat055.group5.export.AddUserToChannel;
-import dat055.group5.export.Channel;
-import dat055.group5.export.Message;
-import dat055.group5.export.User;
+import dat055.group5.export.*;
+import dat055.group5.manager.*;
 
 import java.net.*;
 import java.io.*;
 
 public class Server {
 
-    // Initialize socket and input stream
     private ServerSocket serverSocket = null;
 
     public void start(int port) throws IOException {
@@ -26,16 +23,22 @@ public class Server {
 
     private static class ClientHandler extends Thread {
         private final ObjectInputStream input;
-        private Socket clientSocket;
-        private UserDatabaseManager userDatabaseManager;
-        private ChannelDatabaseManager channelDatabaseManager;
-        private MessageDatabaseManager messageDatabaseManager;
+        private final Socket clientSocket;
 
+        private final UserDatabaseManager userDatabaseManager;
+        private final ChannelDatabaseManager channelDatabaseManager;
+        private final MessageDatabaseManager messageDatabaseManager;
 
         public ClientHandler(Socket socket) {
             this.clientSocket = socket;
             try {
                 this.input = new ObjectInputStream(socket.getInputStream());
+
+                Driver driver = new Driver();
+                this.userDatabaseManager = new UserDatabaseManager(driver);
+                this.channelDatabaseManager = new ChannelDatabaseManager(driver);
+                this.messageDatabaseManager = new MessageDatabaseManager(driver);
+
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -43,16 +46,14 @@ public class Server {
 
         @Override
         public void run() {
-            while (clientSocket.isConnected()) {
-
-                NetworkPackage networkPackage = null;
+            while (!clientSocket.isClosed() && clientSocket.isConnected()) {
                 try {
-                    networkPackage = (NetworkPackage) input.readObject();
+                    NetworkPackage networkPackage = (NetworkPackage) input.readObject();
 
                     switch (networkPackage.getType()) {
                         case "CreateChannel" : {
                             Channel channel = (Channel) networkPackage.getData();
-                            channelDatabaseManager.CreateChannel(channel);
+                            channelDatabaseManager.addChannel(channel);
                         }
                         case "CreateUser":{
                             User user = (User) networkPackage.getData();
@@ -60,54 +61,50 @@ public class Server {
                         }
                         case "CreateMessage" : {
                             Message message = (Message) networkPackage.getData();
-                            MessageDatabaseManager.addMessage(message);
+                            messageDatabaseManager.addMessage(message);
                         }
                         case "AddUserToChannel" : {
                             try{
-                                AddUserToChannel userData = (AddUserToChannel) networkPackage.data;
-                                userDatabaseManager.addUser(userData.getUser_name(), userData.getChannel_id());
+                                AddUserWithChannel userData = (AddUserWithChannel) networkPackage.data;
+                                for(String username : userData.getUsernames()){
+                                    channelDatabaseManager.addUserToChannel(username, userData.getChannelID());
+                                }
                             } catch(Exception e){
                                 e.printStackTrace();
                             }
                         }
                         case "RemoveUserFromChannel" : {
-                            String message = (String) networkPackage.getData();
-                            String[] parts = message.split("/");
-
-                            String username = parts[0]; // "Users"
-                            String channelId = parts[1]; // "Channels"
-
-                            ChannelDatabaseManager.removeUserFromChannel(username, channelId);
+                            AddUserWithChannel userData = (AddUserWithChannel) networkPackage.data;
+                            for(String username : userData.getUsernames()){
+                                channelDatabaseManager.removeUserFromChannel(username, userData.getChannelID());
+                            }
                         }
                         case "GetChannels" : {
-                            String userName = (String) networkPackage.getData();
-                            channelDatabaseManager.getChannels(userName);
+                            String username = (String) networkPackage.getData();
+                            channelDatabaseManager.getAllChannelsForUser(username);
                         }
                         case "GetMessages" : {
-                            String channel_id = (String) networkPackage.getData();
-                            channelDatabaseManager.getChannels(channel_id);
+                            Integer channelID = (Integer) networkPackage.getData();
+                            messageDatabaseManager.getMessagesByChannel(channelID);
                         }
                         case "GetUsers" : {
-                            UserDatabaseManager.getUsers();
+                            userDatabaseManager.getUsers();
                         }
                         case "GetUsersInChannel" : {
-                            String channel_id = (String) networkPackage.getData();
-                            channelDatabaseManager.getUsersInChannel(channel_id);
+                            Integer channel_id = (Integer) networkPackage.getData();
+                            channelDatabaseManager.getAllUsersInChannel(channel_id);
                         }
                         case "Login" : {
                             User user = (User) networkPackage.getData();
-                            UserDatabaseManager.login(user);
+                            userDatabaseManager.authenticateUser(user);
                         }
-
                     }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                } catch (ClassNotFoundException e) {
-                    throw new RuntimeException(e);
+                } catch (IOException | ClassNotFoundException e) {
+                    System.err.println("Client disconnected or error: " + e.getMessage());
+                    break;
                 }
-
             }
         }
-
     }
+
 }

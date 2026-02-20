@@ -1,5 +1,7 @@
 package dat055.group5;
 
+import dat055.group5.manager.*;
+
 import java.sql.SQLException;
 
 public class Driver {
@@ -20,8 +22,6 @@ public class Driver {
     }
 
     void main(){
-        messageDatabaseManager.addMessage("user1", 1, "yello", null);
-        messageDatabaseManager.printMessages();
     }
 
     public PortalConnection getPortalConnection() {
@@ -34,5 +34,9 @@ public class Driver {
 
     public UserDatabaseManager getUserDatabaseManager() {
         return userDatabaseManager;
+    }
+
+    public MessageDatabaseManager getMessageDatabaseManager() {
+        return messageDatabaseManager;
     }
 }
