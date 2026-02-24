@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="350.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dat055.group5.client.controller.ChatMessageController" fx:id="parent">
+   <children>
+      <Label fx:id="userLabel" text="Theo">
+         <font>
+            <Font name="JetBrains Mono Bold" size="16.0" />
+         </font>
+         <VBox.margin>
+            <Insets top="3.0" />
+         </VBox.margin></Label>
+      <Label fx:id="messageLabel" text="Hej alla, detta är mitt långa meddelande jag skickar nu!!!!!!!!!!" wrapText="true">
+         <font>
+            <Font name="JetBrains Mono Regular" size="11.0" />
+         </font>
+         <VBox.margin>
+            <Insets bottom="5.0" />
+         </VBox.margin></Label>
+   </children>
+   <padding>
+      <Insets left="10.0" />
+   </padding>
+</VBox>
