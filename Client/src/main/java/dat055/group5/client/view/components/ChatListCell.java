@@ -29,8 +29,7 @@ public class ChatListCell extends ListCell<Message> {
             setGraphic(null);
         } else {
             if (loader == null) {
-                // Load your FXML design
-                loader = new FXMLLoader(getClass().getResource("/path/to/chat_bubble.fxml"));
+                loader = new FXMLLoader(getClass().getResource("/dat055/group5/client/components/chat-message.fxml"));
                 try {
                     loader.load();
                     chatMessageController = loader.getController();
@@ -39,7 +38,6 @@ public class ChatListCell extends ListCell<Message> {
                 }
             }
 
-            // Pass the data to your FXML's controller
             chatMessageController.updateUI(message);
 
             setGraphic(chatMessageController.getParent());
