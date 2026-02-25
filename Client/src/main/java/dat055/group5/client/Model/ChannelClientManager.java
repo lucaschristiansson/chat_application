@@ -25,7 +25,7 @@ public class ChannelClientManager implements ChannelManager {
 
     @Override
     public boolean addChannel(Channel channel) {
-        return false;
+        
     }
 
     @Override

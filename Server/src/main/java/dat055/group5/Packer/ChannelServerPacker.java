@@ -23,12 +23,12 @@ public class ChannelServerPacker implements ChannelPacker <List<User>, List<Chan
     }
 
     @Override
-    public NetworkPackage getAllChannelsForUser(List<User> list) {
+    public NetworkPackage getAllChannelsForUser(List<Channel> list) {
         return new NetworkPackage(PackageType.GET_CHANNELS_FOR_USER, list);
     }
 
     @Override
-    public NetworkPackage getAllUsersInChannel(List<Channel> list) {
+    public NetworkPackage getAllUsersInChannel(List<User> list) {
         return new NetworkPackage(PackageType.GET_USER_IN_CHANNEL, list);
     }
 }
