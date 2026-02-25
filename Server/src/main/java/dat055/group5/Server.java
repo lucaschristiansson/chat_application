@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+
 public class Server extends Thread{
 
     // https://www.geeksforgeeks.org/java/collections-synchronizedset-method-in-java-with-examples/
@@ -16,11 +17,19 @@ public class Server extends Thread{
     private ServerSocket serverSocket = null;
 
 
+    /**
+     * Creates a serverSocket on port
+     * @param port
+     * @throws IOException
+     */
     public Server(int port) throws IOException{
         serverSocket = new ServerSocket(port);
         System.out.println("Server started on port " + port);
     }
 
+    /**
+     * Listens for new clients and connects them to a ClientHandler
+     */
     @Override
     public void run() {
         while (true) {
@@ -45,6 +54,10 @@ public class Server extends Thread{
         }
     }
 
+    /**
+     * Removes a client from clients list
+     * @param client
+     */
     public void removeClient(ClientHandler client) {
         clients.remove(client);
         System.out.println("Client disconnected.");
@@ -61,6 +74,7 @@ public class Server extends Thread{
         private final UserDatabaseManager userDatabaseManager;
         private final ChannelDatabaseManager channelDatabaseManager;
         private final MessageDatabaseManager messageDatabaseManager;
+
 
         public ClientHandler(Socket socket, Server server) {
             this.clientSocket = socket;
