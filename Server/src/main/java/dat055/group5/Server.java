@@ -26,15 +26,6 @@ public class Server {
         }
     }
 
-    public void broadcast(Message message) {
-        synchronized (clients) {
-            for (ClientHandler client : clients) {
-                client.sendMessage(message);
-                System.out.println(client);
-            }
-        }
-    }
-
     public void removeClient(ClientHandler client) {
         clients.remove(client);
         System.out.println("Client disconnected.");
@@ -49,6 +40,8 @@ public class Server {
         private ObjectOutputStream out;
         private final Socket clientSocket;
         private final Server server;
+        private boolean verified = false;
+        private String username;
 
         private final UserDatabaseManager userDatabaseManager;
         private final ChannelDatabaseManager channelDatabaseManager;
@@ -77,72 +70,29 @@ public class Server {
             while (!clientSocket.isClosed() && clientSocket.isConnected()) {
                 try {
                     Object obj = in.readObject();
-                    /*TODO*/
-                    // Create a enum for the different types of network packages
                     if (obj instanceof NetworkPackage) {
                         NetworkPackage networkPackage = (NetworkPackage) obj;
-                        switch (networkPackage.getType()) {
-                            case "CreateMessage" -> {
-                                Message msg = (Message) networkPackage.getData();
-                                if(messageDatabaseManager.addMessage(msg)){
-                                    server.broadcast(msg);
-                                    System.out.println("will send");
-                                }
-                            }
-                        }
-                    }
 
-                    /*
-                    switch (networkPackage.getType()) {
-                        case "CreateChannel" : {
-                            Channel channel = (Channel) networkPackage.getData();
-                            channelDatabaseManager.addChannel(channel);
-                        }
-                        case "CreateUser":{
-                            User user = (User) networkPackage.getData();
-                            userDatabaseManager.addUser(user);
-                        }
-                        case "CreateMessage" : {
-                            Message message = (Message) networkPackage.getData();
-                            messageDatabaseManager.addMessage(message);
-                        }
-                        case "AddUserToChannel" : {
-                            try{
-                                AddUserWithChannel userData = (AddUserWithChannel) networkPackage.getData();
-                                for(String username : userData.getUsernames()){
-                                    channelDatabaseManager.addUserToChannel(username, userData.getChannelID());
+                        switch (networkPackage.getType()){
+                            case Actions.AUTH -> {
+                                User user = (User) networkPackage.getData();
+
+                                NetworkPackage response = new NetworkPackage(Actions.VERIFY, false);
+
+                                response.setID(networkPackage.getID());
+
+                                if(userDatabaseManager.authenticateUser(user)){
+                                    username = user.getUsername();
+                                    verified = true;
+                                    response.setData(true);
+                                    System.out.println("User " + username + " authenticated.");
+                                } else {
+                                    System.out.println("Authentication failed for " + user.getUsername());
                                 }
-                            } catch(Exception e){
-                                e.printStackTrace();
+                                sendPackage(response);
                             }
-                        }
-                        case "RemoveUserFromChannel" : {
-                            AddUserWithChannel userData = (AddUserWithChannel) networkPackage.getData();
-                            for(String username : userData.getUsernames()){
-                                channelDatabaseManager.removeUserFromChannel(username, userData.getChannelID());
-                            }
-                        }
-                        case "GetChannels" : {
-                            String username = (String) networkPackage.getData();
-                            channelDatabaseManager.getAllChannelsForUser(username);
-                        }
-                        case "GetMessages" : {
-                            Integer channelID = (Integer) networkPackage.getData();
-                            messageDatabaseManager.getMessagesByChannel(channelID);
-                        }
-                        case "GetUsers" : {
-                            userDatabaseManager.getUsers();
-                        }
-                        case "GetUsersInChannel" : {
-                            Integer channel_id = (Integer) networkPackage.getData();
-                            channelDatabaseManager.getAllUsersInChannel(channel_id);
-                        }
-                        case "Login" : {
-                            User user = (User) networkPackage.getData();
-                            userDatabaseManager.authenticateUser(user);
                         }
                     }
-                     */
                 } catch (IOException | ClassNotFoundException e) {
                     System.err.println("Client disconnected or error: " + e.getMessage());
                     break;
@@ -150,7 +100,7 @@ public class Server {
             }
         }
 
-        public void sendMessage(Message message) {
+        public void sendPackage(NetworkPackage message) {
             try {
                 synchronized (out) {
                     out.writeObject(message);
