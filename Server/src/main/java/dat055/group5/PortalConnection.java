@@ -49,7 +49,7 @@ public class PortalConnection {
         if (db == null) {
             throw new RuntimeException("Missing Environment Variable: POSTGRES_DB");
         }
-        return "jdbc:postgresql://localhost:1234/" + db;
+        return "jdbc:postgresql://localhost:5431/" + db;
     }
 
 
