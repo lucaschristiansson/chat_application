@@ -7,6 +7,7 @@ public class NetworkPackage implements Serializable {
     PackageType type;
     Object data;
 
+
     public NetworkPackage (PackageType type, Object data) {
         this.type = type;
         this.data = data;

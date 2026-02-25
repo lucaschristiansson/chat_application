@@ -81,17 +81,17 @@ public class Client {
                     if (obj instanceof NetworkPackage){
                         NetworkPackage networkPackage = (NetworkPackage) obj;
                         switch (networkPackage.getType()) {
-                            case "CreateChannel" : {
+                            case CREATE_CHANNEL: {
                                 Channel channel = (Channel) networkPackage.getData();
 
                             }
-                            case "CreateUser":{
+                            case CREATE_USER:{
                                 User user = (User) networkPackage.getData();
                             }
-                            case "CreateMessage" : {
+                            case CREATE_MESSAGE: {
                                 Message message = (Message) networkPackage.getData();
                             }
-                            case "AddUserToChannel" : {
+                            case ADD_USER_TO_CHANNEL: {
                                 try{
                                     AddUserWithChannel userData = (AddUserWithChannel) networkPackage.getData();
                                     for(String username : userData.getUsernames()){
@@ -100,24 +100,24 @@ public class Client {
                                     e.printStackTrace();
                                 }
                             }
-                            case "RemoveUserFromChannel" : {
+                            case REMOVE_USER_FROM_CHANNEL: {
                                 AddUserWithChannel userData = (AddUserWithChannel) networkPackage.getData();
                                 for(String username : userData.getUsernames()){
                                 }
                             }
-                            case "GetChannels" : {
+                            case GET_CHANNELS_FOR_USER: {
                                 String username = (String) networkPackage.getData();
                             }
-                            case "GetMessages" : {
+                            case GET_MESSAGES_BY_CHANNEL: {
                                 List<Message> messages = (List<Message>) networkPackage.getData();
-                                MessageClientManager.get
+
                             }
-                            case "GetUsers" : {
+                            case GET_USERS: {
                             }
-                            case "GetUsersInChannel" : {
+                            case GET_USER_IN_CHANNEL: {
                                 Integer channel_id = (Integer) networkPackage.getData();
                             }
-                            case "Login" : {
+                            case LOGIN: {
                                 User user = (User) networkPackage.getData();
                             }
                         }
