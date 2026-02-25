@@ -82,7 +82,7 @@ public class Server {
                     if (obj instanceof NetworkPackage) {
                         NetworkPackage networkPackage = (NetworkPackage) obj;
                         switch (networkPackage.getType()) {
-                            case "CreateMessage" -> {
+                            case PackageType.CREATE_MESSAGE -> {
                                 Message msg = (Message) networkPackage.getData();
                                 if(messageDatabaseManager.addMessage(msg)){
                                     server.broadcast(msg);

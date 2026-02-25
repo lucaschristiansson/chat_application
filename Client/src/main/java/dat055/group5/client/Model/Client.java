@@ -1,9 +1,13 @@
 package dat055.group5.client.Model;
 import dat055.group5.export.Message;
 import dat055.group5.export.NetworkPackage;
+import dat055.group5.export.Channel;
+import dat055.group5.export.User;
+import dat055.group5.export.AddUserWithChannel;
 
 import java.io.*;
 import java.net.*;
+import java.util.List;
 import java.util.Scanner;
 
 public class Client {
@@ -74,7 +78,52 @@ public class Client {
             try {
                 while (true) {
                     Object obj = reader.readObject();
+                    if (obj instanceof NetworkPackage){
+                        NetworkPackage networkPackage = (NetworkPackage) obj;
+                        switch (networkPackage.getType()) {
+                            case "CreateChannel" : {
+                                Channel channel = (Channel) networkPackage.getData();
 
+                            }
+                            case "CreateUser":{
+                                User user = (User) networkPackage.getData();
+                            }
+                            case "CreateMessage" : {
+                                Message message = (Message) networkPackage.getData();
+                            }
+                            case "AddUserToChannel" : {
+                                try{
+                                    AddUserWithChannel userData = (AddUserWithChannel) networkPackage.getData();
+                                    for(String username : userData.getUsernames()){
+                                    }
+                                } catch(Exception e){
+                                    e.printStackTrace();
+                                }
+                            }
+                            case "RemoveUserFromChannel" : {
+                                AddUserWithChannel userData = (AddUserWithChannel) networkPackage.getData();
+                                for(String username : userData.getUsernames()){
+                                }
+                            }
+                            case "GetChannels" : {
+                                String username = (String) networkPackage.getData();
+                            }
+                            case "GetMessages" : {
+                                List<Message> messages = (List<Message>) networkPackage.getData();
+                                MessageClientManager.get
+                            }
+                            case "GetUsers" : {
+                            }
+                            case "GetUsersInChannel" : {
+                                Integer channel_id = (Integer) networkPackage.getData();
+                            }
+                            case "Login" : {
+                                User user = (User) networkPackage.getData();
+                            }
+                        }
+                    }
+
+                    //dessa ska bort va
                     if (obj instanceof Message) {
                         Message msg = (Message) obj;
                         System.out.println("\n[" + msg.getSender() + "]: " + msg.getContent());

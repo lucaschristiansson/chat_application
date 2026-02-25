@@ -3,15 +3,16 @@ package dat055.group5.export;
 import java.io.Serializable;
 
 public class NetworkPackage implements Serializable {
-    String type;
+
+    PackageType type;
     Object data;
 
-    public NetworkPackage (String type, Object data) {
+    public NetworkPackage (PackageType type, Object data) {
         this.type = type;
         this.data = data;
     }
     
-    public String getType() {
+    public PackageType getType() {
         return this.type;
     }
 
@@ -19,7 +20,7 @@ public class NetworkPackage implements Serializable {
         return this.data;
     }
 
-    public void setType(String type){
+    public void setType(PackageType type){
         this.type = type;
     }
 

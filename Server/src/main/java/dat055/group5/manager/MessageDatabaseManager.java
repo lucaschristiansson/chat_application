@@ -5,13 +5,15 @@ package dat055.group5.manager;
 
 import dat055.group5.Driver;
 import dat055.group5.export.Message;
+import dat055.group5.export.MessageManager;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import static dat055.group5.PortalConnection.getError;
 
-public class MessageDatabaseManager {
+public class MessageDatabaseManager implements MessageManager {
     private final dat055.group5.Driver driver;
     private final Connection connection;
 
@@ -19,7 +21,7 @@ public class MessageDatabaseManager {
         this.driver = driver;
         this.connection = driver.getPortalConnection().getConnection();
     }
-
+    @Override
     public boolean addMessage(Message message){
         String sql = "INSERT INTO Messages (message_time, username, channel_id, content, image_path) VALUES (?, ?, ?, ?, ?)";
         try(PreparedStatement ps = connection.prepareStatement(sql)){
@@ -39,7 +41,7 @@ public class MessageDatabaseManager {
         }
         return false;
     }
-
+    @Override
     public List<Message> getMessagesByChannel(int channelId) {
         String query =
                 "SELECT M.messageTime, M.username, M.content, M.imagePath " +
