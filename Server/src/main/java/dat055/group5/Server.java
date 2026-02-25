@@ -90,67 +90,59 @@ public class Server extends Thread{
                     if (obj instanceof NetworkPackage) {
                         NetworkPackage networkPackage = (NetworkPackage) obj;
                         switch (networkPackage.getType()) {
-                            case "CreateMessage" -> {
-                                Message msg = (Message) networkPackage.getData();
-                                if(messageDatabaseManager.addMessage(msg)){
-                                    server.broadcast(msg);
-                                    System.out.println("will send");
+                            case CREATE_CHANNEL: {
+                                Channel channel = (Channel) networkPackage.getData();
+                                channelDatabaseManager.addChannel(channel);
+                            }
+                            case CREATE_USER: {
+                                User user = (User) networkPackage.getData();
+                                userDatabaseManager.addUser(user);
+                            }
+                            case CREATE_MESSAGE: {
+                                Message message = (Message) networkPackage.getData();
+                                messageDatabaseManager.addMessage(message);
+                                break;
+                            }
+                            case ADD_USER_TO_CHANNEL: {
+                                try{
+                                    AddUserWithChannel userData = (AddUserWithChannel) networkPackage.getData();
+                                    for(String username : userData.getUsernames()){
+                                        channelDatabaseManager.addUserToChannel(username, userData.getChannelID());
+                                    }
+                                } catch(Exception e){
+                                    e.printStackTrace();
                                 }
+                            }
+                            case REMOVE_USER_FROM_CHANNEL: {
+                                AddUserWithChannel userData = (AddUserWithChannel) networkPackage.getData();
+                                for(String username : userData.getUsernames()){
+                                    channelDatabaseManager.removeUserFromChannel(username, userData.getChannelID());
+                                }
+                            }
+                            case GET_CHANNELS_FOR_USER: {
+                                String username = (String) networkPackage.getData();
+                                channelDatabaseManager.getAllChannelsForUser(username);
+                            }
+                            case GET_MESSAGES_BY_CHANNEL: {
+                                Integer channelID = (Integer) networkPackage.getData();
+                                messageDatabaseManager.getMessagesByChannel(channelID);
+                            }
+                            case GET_USERS: {
+                                userDatabaseManager.getUsers();
+                            }
+                            case GET_USER_IN_CHANNEL: {
+                                Integer channel_id = (Integer) networkPackage.getData();
+                                channelDatabaseManager.getAllUsersInChannel(channel_id);
+                            }
+                            case LOGIN: {
+                                User user = (User) networkPackage.getData();
+                                userDatabaseManager.authenticateUser(user);
                             }
                         }
                     }
 
-                    /*
-                    switch (networkPackage.getType()) {
-                        case "CreateChannel" : {
-                            Channel channel = (Channel) networkPackage.getData();
-                            channelDatabaseManager.addChannel(channel);
-                        }
-                        case "CreateUser":{
-                            User user = (User) networkPackage.getData();
-                            userDatabaseManager.addUser(user);
-                        }
-                        case "CreateMessage" : {
-                            Message message = (Message) networkPackage.getData();
-                            messageDatabaseManager.addMessage(message);
-                        }
-                        case "AddUserToChannel" : {
-                            try{
-                                AddUserWithChannel userData = (AddUserWithChannel) networkPackage.getData();
-                                for(String username : userData.getUsernames()){
-                                    channelDatabaseManager.addUserToChannel(username, userData.getChannelID());
-                                }
-                            } catch(Exception e){
-                                e.printStackTrace();
-                            }
-                        }
-                        case "RemoveUserFromChannel" : {
-                            AddUserWithChannel userData = (AddUserWithChannel) networkPackage.getData();
-                            for(String username : userData.getUsernames()){
-                                channelDatabaseManager.removeUserFromChannel(username, userData.getChannelID());
-                            }
-                        }
-                        case "GetChannels" : {
-                            String username = (String) networkPackage.getData();
-                            channelDatabaseManager.getAllChannelsForUser(username);
-                        }
-                        case "GetMessages" : {
-                            Integer channelID = (Integer) networkPackage.getData();
-                            messageDatabaseManager.getMessagesByChannel(channelID);
-                        }
-                        case "GetUsers" : {
-                            userDatabaseManager.getUsers();
-                        }
-                        case "GetUsersInChannel" : {
-                            Integer channel_id = (Integer) networkPackage.getData();
-                            channelDatabaseManager.getAllUsersInChannel(channel_id);
-                        }
-                        case "Login" : {
-                            User user = (User) networkPackage.getData();
-                            userDatabaseManager.authenticateUser(user);
-                        }
-                    }
-                     */
+
+
                 } catch (IOException | ClassNotFoundException e) {
                     System.err.println("Client disconnected or error: " + e.getMessage());
                     break;
