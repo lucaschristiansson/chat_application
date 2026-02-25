@@ -1,18 +1,29 @@
 package dat055.group5.export;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 public class NetworkPackage implements Serializable {
 
     PackageType type;
+    UUID id;
     Object data;
 
 
     public NetworkPackage (PackageType type, Object data) {
+        id = UUID.randomUUID();
         this.type = type;
         this.data = data;
     }
-    
+
+
+    public UUID getID(){
+        return id;
+    }
+    public void setID(UUID id) {
+        this.id = id;
+    }
+
     public PackageType getType() {
         return this.type;
     }

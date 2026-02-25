@@ -57,8 +57,9 @@ public class UserDatabaseManager implements UserManager {
             e.printStackTrace();
         }
     }
+
     @Override
-    public void authenticateUser(User user){
+    public boolean authenticateUser(User user){
         String sql = "SELECT 1 FROM Users WHERE username =? AND password =?";
         try(PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, user.getUsername());
@@ -67,6 +68,7 @@ public class UserDatabaseManager implements UserManager {
             try(ResultSet rs = ps.executeQuery()){
                 if(rs.next()){
                     System.out.println("Login was successful! User exists");
+                    return true;
                 }else{
                     System.out.println("Invalid username or password");
                 }
@@ -76,7 +78,7 @@ public class UserDatabaseManager implements UserManager {
             getError(e);
             e.printStackTrace();
         }
-
+        return false;
     }
 
 }

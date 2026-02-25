@@ -45,7 +45,7 @@ public class Server extends Thread{
         }
     }
 
-    public void removeClient(ClientHandler client) {
+    public void remActionsoveClient(ClientHandler client) {
         clients.remove(client);
         System.out.println("Client disconnected.");
     }
@@ -57,6 +57,8 @@ public class Server extends Thread{
         private ObjectOutputStream out;
         private final Socket clientSocket;
         private final Server server;
+        private boolean verified = false;
+        private String username;
 
         private final UserDatabaseManager userDatabaseManager;
         private final ChannelDatabaseManager channelDatabaseManager;
@@ -87,8 +89,7 @@ public class Server extends Thread{
                     Object obj = in.readObject();
                     /*TODO*/
                     // Create a enum for the different types of network packages
-                    if (obj instanceof NetworkPackage) {
-                        NetworkPackage networkPackage = (NetworkPackage) obj;
+                    if (obj instanceof NetworkPackage networkPackage) {
                         switch (networkPackage.getType()) {
                             case CREATE_CHANNEL: {
                                 Channel channel = (Channel) networkPackage.getData();
@@ -144,14 +145,23 @@ public class Server extends Thread{
                             }
                             case LOGIN: {
                                 User user = (User) networkPackage.getData();
-                                userDatabaseManager.authenticateUser(user);
-                                break;
+
+                                NetworkPackage response = new NetworkPackage(Actions.VERIFY, false);
+
+                                response.setID(networkPackage.getID());
+
+                                if(userDatabaseManager.authenticateUser(user)){
+                                    username = user.getUsername();
+                                    verified = true;
+                                    response.setData(true);
+                                    System.out.println("User " + username + " authenticated.");
+                                } else {
+                                    System.out.println("Authentication failed for " + user.getUsername());
+                                }
+                                sendPackage(response);
                             }
                         }
                     }
-
-
-
                 } catch (IOException | ClassNotFoundException e) {
                     System.err.println("Client disconnected or error: " + e.getMessage());
                     break;
@@ -160,7 +170,7 @@ public class Server extends Thread{
             server.removeClient(this);
         }
 
-        public void sendMessage(Message message) {
+        public void sendPackage(NetworkPackage message) {
             try {
                 synchronized (out) {
                     out.writeObject(message);
