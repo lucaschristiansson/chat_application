@@ -5,9 +5,7 @@ import dat055.group5.export.ChannelPacker;
 import dat055.group5.export.NetworkPackage;
 import dat055.group5.export.PackageType;
 
-import java.util.List;
-
-public class ChannelClientPacker implements ChannelPacker <String, String> {
+public class ChannelClientPacker implements ChannelPacker <String, String, String> {
 
     @Override
     public NetworkPackage addChannel(Channel channel) {
@@ -34,5 +32,10 @@ public class ChannelClientPacker implements ChannelPacker <String, String> {
     @Override
     public NetworkPackage getAllUsersInChannel(String channelID) {
         return new NetworkPackage(PackageType.GET_USER_IN_CHANNEL, channelID);
+    }
+
+    @Override
+    public NetworkPackage getChannel(String channelId) {
+        return new NetworkPackage(PackageType.GET_CHANNEL, channelId);
     }
 }

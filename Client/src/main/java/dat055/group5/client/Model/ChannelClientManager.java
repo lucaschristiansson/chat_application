@@ -6,7 +6,7 @@ import dat055.group5.export.ChannelManager;
 
 import java.util.List;
 
-public class ChannelClientManager implements ChannelManager {
+public class ChannelClientManager implements ChannelManager <Channel>{
     List<Channel> channels;
     User user;
 
@@ -46,5 +46,10 @@ public class ChannelClientManager implements ChannelManager {
     @Override
     public List<String> getAllUsersInChannel(int channelID) {
         return List.of();
+    }
+
+    @Override
+    public void getChannel(Channel channel) {
+
     }
 }

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ChannelDatabaseManager implements ChannelManager {
+public class ChannelDatabaseManager implements ChannelManager <String>{
     private final Driver driver;
     private final Connection connection;
 
@@ -96,5 +96,10 @@ public class ChannelDatabaseManager implements ChannelManager {
             e.printStackTrace();
         }
         return users;
+    }
+
+    @Override
+    public void getChannel(String channel) {
+
     }
 }
