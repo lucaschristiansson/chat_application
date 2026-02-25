@@ -13,6 +13,7 @@ public class Launcher {
         System.out.println("main runs");
         Client client = new Client("127.0.0.1", 5000);
         Message message = new Message("user1", "wdawd", 1);
+
         MessageClientPacker messageClientPacker = new MessageClientPacker();
         client.sendNetworkPackage(messageClientPacker.addMessage(message));
     }
