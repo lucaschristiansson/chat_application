@@ -85,10 +85,12 @@ public class Server {
                             case CREATE_CHANNEL: {
                                 Channel channel = (Channel) networkPackage.getData();
                                 channelDatabaseManager.addChannel(channel);
+                                break;
                             }
                             case CREATE_USER: {
                                 User user = (User) networkPackage.getData();
                                 userDatabaseManager.addUser(user);
+                                break;
                             }
                             case CREATE_MESSAGE: {
                                 Message message = (Message) networkPackage.getData();
@@ -104,31 +106,38 @@ public class Server {
                                 } catch(Exception e){
                                     e.printStackTrace();
                                 }
+                                break;
                             }
                             case REMOVE_USER_FROM_CHANNEL: {
                                 AddUserWithChannel userData = (AddUserWithChannel) networkPackage.getData();
                                 for(String username : userData.getUsernames()){
                                     channelDatabaseManager.removeUserFromChannel(username, userData.getChannelID());
                                 }
+                                break;
                             }
                             case GET_CHANNELS_FOR_USER: {
                                 String username = (String) networkPackage.getData();
                                 channelDatabaseManager.getAllChannelsForUser(username);
+                                break;
                             }
                             case GET_MESSAGES_BY_CHANNEL: {
                                 Integer channelID = (Integer) networkPackage.getData();
                                 messageDatabaseManager.getMessagesByChannel(channelID);
+                                break;
                             }
                             case GET_USERS: {
                                 userDatabaseManager.getUsers();
+                                break;
                             }
                             case GET_USER_IN_CHANNEL: {
                                 Integer channel_id = (Integer) networkPackage.getData();
                                 channelDatabaseManager.getAllUsersInChannel(channel_id);
+                                break;
                             }
                             case LOGIN: {
                                 User user = (User) networkPackage.getData();
                                 userDatabaseManager.authenticateUser(user);
+                                break;
                             }
                         }
                     }

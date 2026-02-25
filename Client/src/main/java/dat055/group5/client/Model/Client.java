@@ -37,7 +37,7 @@ public class Client {
         }
 
         System.out.println("Type your message (or 'Over' to quit):");
-
+        /*
         while (true) {
             try {
                 if (scanner.hasNextLine()) {
@@ -66,6 +66,8 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+         */
     }
 
     public void sendNetworkPackage(NetworkPackage networkPackage){
@@ -94,13 +96,15 @@ public class Client {
                         switch (networkPackage.getType()) {
                             case CREATE_CHANNEL: {
                                 Channel channel = (Channel) networkPackage.getData();
-
+                                break;
                             }
                             case CREATE_USER:{
                                 User user = (User) networkPackage.getData();
+                                break;
                             }
                             case CREATE_MESSAGE: {
                                 Message message = (Message) networkPackage.getData();
+                                break;
                             }
                             case ADD_USER_TO_CHANNEL: {
                                 try{
@@ -110,27 +114,34 @@ public class Client {
                                 } catch(Exception e){
                                     e.printStackTrace();
                                 }
+                                break;
                             }
                             case REMOVE_USER_FROM_CHANNEL: {
                                 AddUserWithChannel userData = (AddUserWithChannel) networkPackage.getData();
                                 for(String username : userData.getUsernames()){
                                 }
+                                break;
                             }
                             case GET_CHANNELS_FOR_USER: {
                                 Channel channel = (Channel) networkPackage.getData();
                                 channelClientManager.getChannel(channel);
+                                break;
                             }
                             case GET_MESSAGES_BY_CHANNEL: {
                                 List<Message> messages = (List<Message>) networkPackage.getData();
-
+                                break;
                             }
                             case GET_USERS: {
+
+                                break;
                             }
                             case GET_USER_IN_CHANNEL: {
                                 Integer channel_id = (Integer) networkPackage.getData();
+                                break;
                             }
                             case LOGIN: {
                                 User user = (User) networkPackage.getData();
+                                break;
                             }
                         }
                     }
