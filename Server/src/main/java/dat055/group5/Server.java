@@ -29,7 +29,7 @@ public class Server extends Thread{
         while (true) {
             ClientHandler clientHandler = null;
             try {
-                clientHandler = new ClientHandler(serverSocket.accept(), this);
+                clientHandler = new ClientHandler(serverSocket.accept(), this, driver);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

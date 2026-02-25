@@ -18,6 +18,14 @@ public class Driver {
 
     public Driver() {
         try {
+            Server server = new Server(5000, this);
+            server.start();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
             this.portalConnection = new PortalConnection(this);
         } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
@@ -25,6 +33,9 @@ public class Driver {
         this.channelDatabaseManager = new ChannelDatabaseManager(this);
         this.messageDatabaseManager = new MessageDatabaseManager(this);
         this.userDatabaseManager = new UserDatabaseManager(this);
+        this.messageServerPacker = new MessageServerPacker();
+        this.channelServerPacker = new ChannelServerPacker();
+        this.userServerPacker = new UserServerPacker();
     }
 
     public PortalConnection getPortalConnection() {
