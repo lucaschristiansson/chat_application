@@ -22,7 +22,7 @@ public class MessageDatabaseManager implements MessageManager {
         this.connection = driver.getPortalConnection().getConnection();
     }
     @Override
-    public boolean addMessage(Message message){
+    public void addMessage(Message message){
         String sql = "INSERT INTO Messages (message_time, username, channel_id, content, image_path) VALUES (?, ?, ?, ?, ?)";
         try(PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setTimestamp(1, Timestamp.from(message.getTimestamp()));
@@ -33,13 +33,11 @@ public class MessageDatabaseManager implements MessageManager {
 
             if (ps.executeUpdate() > 0) {
                 System.out.println("Message: "+ message.getContent() + " added successfully.");
-                return true;
             }
         } catch (SQLException e) {
             System.err.println(getError(e));
             e.printStackTrace();
         }
-        return false;
     }
     @Override
     public List<Message> getMessagesByChannel(int channelId) {

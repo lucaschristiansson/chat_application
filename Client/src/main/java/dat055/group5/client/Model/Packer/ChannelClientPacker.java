@@ -1,4 +1,4 @@
-package dat055.group5.client.Model;
+package dat055.group5.client.Model.Packer;
 
 import dat055.group5.export.Channel;
 import dat055.group5.export.ChannelPacker;

@@ -8,7 +8,6 @@ public interface ChannelPacker <C, U, I> {
      NetworkPackage removeUserFromChannel(String username, String channelID);
     NetworkPackage getAllChannelsForUser(C usernameOrList);
     NetworkPackage getAllUsersInChannel(U channelIDOrList);
-    NetworkPackage getChannel (I channelId);
 
-    NetworkPackage getChannel(String channelId);
+    NetworkPackage getChannel (I channelId);
 }

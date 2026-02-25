@@ -1,6 +1,5 @@
-package dat055.group5.client.Model;
+package dat055.group5.client.Model.manager;
 
-import dat055.group5.export.NetworkPackage;
 import dat055.group5.export.User;
 import dat055.group5.export.UserManager;
 

@@ -1,5 +1,6 @@
-package dat055.group5.client.Model;
+package dat055.group5.client.Model.manager;
 
+import dat055.group5.client.Model.Model;
 import dat055.group5.export.User;
 import dat055.group5.export.Channel;
 import dat055.group5.export.ChannelManager;
@@ -9,6 +10,7 @@ import java.util.List;
 public class ChannelClientManager implements ChannelManager <Channel>{
     List<Channel> channels;
     User user;
+    Model model;
 
     public ChannelClientManager(User user, List<Channel> channels) {
         this.user = user;
@@ -19,23 +21,18 @@ public class ChannelClientManager implements ChannelManager <Channel>{
         this.user = new User(userName, password);
     }
 
-    public void fetchChannels() {
-        //this.channels = "From server"
+    @Override
+    public void addChannel(Channel channel) {
+        model.addToChannelList(channel);
     }
 
     @Override
-    public boolean addChannel(Channel channel) {
-        
+    public void addUserToChannel(String username, int channelId) {
+        model.addUserToActiveChannel(username, channelId);
     }
 
     @Override
-    public boolean addUserToChannel(String username, int ChannelId) {
-        return false;
-    }
-
-    @Override
-    public boolean removeUserFromChannel(String username, int channelID) {
-        return false;
+    public void removeUserFromChannel(String username, int channelID) {
     }
 
     @Override
@@ -50,6 +47,6 @@ public class ChannelClientManager implements ChannelManager <Channel>{
 
     @Override
     public void getChannel(Channel channel) {
-
+        model.setActiveChannel(channel);
     }
 }

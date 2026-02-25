@@ -20,46 +20,40 @@ public class ChannelDatabaseManager implements ChannelManager <String>{
         this.connection = driver.getPortalConnection().getConnection();
     }
     @Override
-    public boolean addChannel(Channel channel) {
+    public void addChannel(Channel channel) {
         String sql = "INSERT INTO Channels (channelID, channelName) VALUES (?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, channel.getChannelID());
             ps.setString(2, channel.getChannelName());
 
             ps.executeUpdate();
-            return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
     }
     @Override
-    public boolean addUserToChannel(String username, int channelID) {
+    public void addUserToChannel(String username, int channelID) {
         String sql = "INSERT INTO UsersInChannel (username, channelID) VALUES (?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, username);
             ps.setInt(2, channelID);
 
             ps.executeUpdate();
-            return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
     }
     @Override
-    public boolean removeUserFromChannel(String username, int channelID) {
+    public void removeUserFromChannel(String username, int channelID) {
         String sql = "DELETE FROM UsersInChannel WHERE username = ? AND channelID = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, username);
             ps.setInt(2, channelID);
             ps.executeUpdate();
-            return true;
         } catch (SQLException e) {
             e.printStackTrace();
 
         }
-        return false;
     }
     @Override
     public List<Channel> getAllChannelsForUser(String username) {

@@ -1,11 +1,9 @@
-package dat055.group5.client.Model;
+package dat055.group5.client.Model.Packer;
 
 import dat055.group5.export.Message;
 import dat055.group5.export.MessagePacker;
 import dat055.group5.export.NetworkPackage;
 import dat055.group5.export.PackageType;
-
-import java.util.List;
 
 public class MessageClientPacker implements MessagePacker <Message> {
     @Override

@@ -93,6 +93,7 @@ public class Server {
                             case CREATE_MESSAGE: {
                                 Message message = (Message) networkPackage.getData();
                                 messageDatabaseManager.addMessage(message);
+                                break;
                             }
                             case ADD_USER_TO_CHANNEL: {
                                 try{

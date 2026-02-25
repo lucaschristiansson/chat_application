@@ -1,9 +1,8 @@
 package dat055.group5.client.Model;
-import dat055.group5.export.Message;
-import dat055.group5.export.NetworkPackage;
-import dat055.group5.export.Channel;
-import dat055.group5.export.User;
-import dat055.group5.export.AddUserWithChannel;
+import dat055.group5.client.Model.manager.ChannelClientManager;
+import dat055.group5.client.Model.manager.MessageClientManager;
+import dat055.group5.client.Model.manager.UserClientManager;
+import dat055.group5.export.*;
 
 import java.io.*;
 import java.net.*;
@@ -16,6 +15,9 @@ public class Client {
     private ObjectOutputStream outputStream;
     private ObjectInputStream inputStream;
     private Scanner scanner;
+    ChannelClientManager channelClientManager;
+    MessageClientManager messageClientManager;
+    UserClientManager userClientManager;
 
     public Client(String addr, int port) {
         try {
@@ -46,7 +48,7 @@ public class Client {
                     }
 
                     Message msg = new Message("user1", text, 1);
-                    NetworkPackage networkPackage = new NetworkPackage("CreateMessage", msg);
+                    NetworkPackage networkPackage = new NetworkPackage(PackageType.CREATE_MESSAGE, msg);
 
                     outputStream.writeObject(networkPackage);
                     outputStream.flush();
@@ -63,6 +65,15 @@ public class Client {
             if (socket != null) socket.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void sendNetworkPackage(NetworkPackage networkPackage){
+        try {
+            outputStream.writeObject(networkPackage);
+            outputStream.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -106,7 +117,8 @@ public class Client {
                                 }
                             }
                             case GET_CHANNELS_FOR_USER: {
-                                String username = (String) networkPackage.getData();
+                                Channel channel = (Channel) networkPackage.getData();
+                                channelClientManager.getChannel(channel);
                             }
                             case GET_MESSAGES_BY_CHANNEL: {
                                 List<Message> messages = (List<Message>) networkPackage.getData();

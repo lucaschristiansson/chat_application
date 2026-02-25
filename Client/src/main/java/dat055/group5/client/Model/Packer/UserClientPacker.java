@@ -1,11 +1,9 @@
-package dat055.group5.client.Model;
+package dat055.group5.client.Model.Packer;
 
 import dat055.group5.export.NetworkPackage;
 import dat055.group5.export.PackageType;
 import dat055.group5.export.User;
 import dat055.group5.export.UserPacker;
-
-import java.sql.Struct;
 
 public class UserClientPacker implements UserPacker <String> {
 
