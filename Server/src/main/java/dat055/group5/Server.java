@@ -146,7 +146,7 @@ public class Server extends Thread{
                             case LOGIN: {
                                 User user = (User) networkPackage.getData();
 
-                                NetworkPackage response = new NetworkPackage(Actions.VERIFY, false);
+                                NetworkPackage response = new NetworkPackage(PackageType.VERIFY, false);
 
                                 response.setID(networkPackage.getID());
 

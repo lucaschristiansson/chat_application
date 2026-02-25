@@ -11,5 +11,6 @@ public enum PackageType {
     GET_USERS,
     GET_USER_IN_CHANNEL,
     LOGIN,
-    GET_CHANNEL
+    GET_CHANNEL,
+    VERIFY
 }
