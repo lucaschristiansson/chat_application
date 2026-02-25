@@ -36,16 +36,16 @@ public class Server extends Thread{
         }
     }
 
-    public void broadcast(Message message) {
+    public void broadcast(NetworkPackage networkPackage) {
         synchronized (clients) {
             for (ClientHandler client : clients) {
-                client.sendMessage(message);
+                client.sendPackage(networkPackage);
                 System.out.println(client);
             }
         }
     }
 
-    public void remActionsoveClient(ClientHandler client) {
+    public void removeClient(ClientHandler client) {
         clients.remove(client);
         System.out.println("Client disconnected.");
     }
