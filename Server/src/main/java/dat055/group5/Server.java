@@ -1,5 +1,6 @@
 package dat055.group5;
 
+import dat055.group5.Packer.MessageServerPacker;
 import dat055.group5.export.*;
 import dat055.group5.manager.*;
 
@@ -7,6 +8,7 @@ import java.net.*;
 import java.io.*;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class Server extends Thread{
@@ -14,11 +16,12 @@ public class Server extends Thread{
     // https://www.geeksforgeeks.org/java/collections-synchronizedset-method-in-java-with-examples/
     private final Set<ClientHandler> clients = Collections.synchronizedSet(new HashSet<>());
     private ServerSocket serverSocket = null;
+    private final Driver driver;
 
-
-    public Server(int port) throws IOException{
+    public Server(int port, Driver driver) throws IOException{
         serverSocket = new ServerSocket(port);
         System.out.println("Server started on port " + port);
+        this.driver = driver;
     }
 
     @Override
@@ -60,21 +63,23 @@ public class Server extends Thread{
         private boolean verified = false;
         private String username;
 
+        private final Driver driver;
         private final UserDatabaseManager userDatabaseManager;
         private final ChannelDatabaseManager channelDatabaseManager;
         private final MessageDatabaseManager messageDatabaseManager;
 
-        public ClientHandler(Socket socket, Server server) {
+        public ClientHandler(Socket socket, Server server, Driver driver) {
             this.clientSocket = socket;
             this.server = server;
+            this.driver = driver;
             try {
                 this.in = new ObjectInputStream(socket.getInputStream());
                 this.out = new ObjectOutputStream(socket.getOutputStream());
 
-                Driver driver = new Driver();
-                this.userDatabaseManager = new UserDatabaseManager(driver);
-                this.channelDatabaseManager = new ChannelDatabaseManager(driver);
-                this.messageDatabaseManager = new MessageDatabaseManager(driver);
+
+                this.userDatabaseManager = driver.getUserDatabaseManager();
+                this.channelDatabaseManager = driver.getChannelDatabaseManager();
+                this.messageDatabaseManager = driver.getMessageDatabaseManager();
 
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -131,7 +136,9 @@ public class Server extends Thread{
                             }
                             case GET_MESSAGES_BY_CHANNEL: {
                                 Integer channelID = (Integer) networkPackage.getData();
-                                messageDatabaseManager.getMessagesByChannel(channelID);
+                                List<Message> messages = messageDatabaseManager.getMessagesByChannel(channelID);
+                                NetworkPackage sendNetworkPackage = driver.getMessageServerPacker().getMessagesByChannel(messages);
+                                sendPackage(sendNetworkPackage);
                                 break;
                             }
                             case GET_USERS: {
@@ -140,7 +147,7 @@ public class Server extends Thread{
                             }
                             case GET_USER_IN_CHANNEL: {
                                 Integer channel_id = (Integer) networkPackage.getData();
-                                channelDatabaseManager.getAllUsersInChannel(channel_id);
+                                List<String> messages = channelDatabaseManager.getAllUsersInChannel(channel_id);
                                 break;
                             }
                             case LOGIN: {

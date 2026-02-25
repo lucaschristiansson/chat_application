@@ -1,5 +1,8 @@
 package dat055.group5;
 
+import dat055.group5.Packer.ChannelServerPacker;
+import dat055.group5.Packer.MessageServerPacker;
+import dat055.group5.Packer.UserServerPacker;
 import dat055.group5.manager.*;
 
 import java.sql.SQLException;
@@ -9,6 +12,9 @@ public class Driver {
     private final ChannelDatabaseManager channelDatabaseManager;
     private final MessageDatabaseManager messageDatabaseManager;
     private final UserDatabaseManager userDatabaseManager;
+    private final MessageServerPacker messageServerPacker;
+    private final ChannelServerPacker channelServerPacker;
+    private final UserServerPacker userServerPacker;
 
     public Driver() {
         try {
@@ -35,5 +41,17 @@ public class Driver {
 
     public MessageDatabaseManager getMessageDatabaseManager() {
         return messageDatabaseManager;
+    }
+
+    public MessageServerPacker getMessageServerPacker() {
+        return messageServerPacker;
+    }
+
+    public ChannelServerPacker getChannelServerPacker() {
+        return channelServerPacker;
+    }
+
+    public UserServerPacker getUserServerPacker() {
+        return userServerPacker;
     }
 }

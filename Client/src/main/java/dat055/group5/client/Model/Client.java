@@ -27,7 +27,12 @@ public class Client {
     public Client(String addr, int port) {
         try {
             socket = new Socket(addr, port);
-            System.out.println("Connected to server at " + addr + ":" + port);
+            if(socket.isConnected()){
+                System.out.println("Connected to server at " + addr + ":" + port);
+
+            }else{
+                throw new SocketException();
+            }
 
             scanner = new Scanner(System.in);
 
@@ -90,7 +95,7 @@ public class Client {
 
 
 
-    public NetworkPackage sendRequestBlocking(Actions type, Object payload) {
+    public NetworkPackage sendRequestBlocking(PackageType type, Object payload) {
         NetworkPackage request = new NetworkPackage(type, payload);
         CompletableFuture<NetworkPackage> future = requestManager.registerRequest(request.getID());
         try {
@@ -103,14 +108,14 @@ public class Client {
         }
     }
 
-    public void sendRequestAsync(Actions type, Object data, java.util.function.Consumer<NetworkPackage> onSuccess) {
-        NetworkPackage request = new NetworkPackage(type, data);
+    public void sendRequestAsync(NetworkPackage networkPackage, java.util.function.Consumer<NetworkPackage> onSuccess) {
 
-        CompletableFuture<NetworkPackage> future = requestManager.registerRequest(request.getID());
-        future.thenAccept(response -> onSuccess.accept(response));
+
+        CompletableFuture<NetworkPackage> future = requestManager.registerRequest(networkPackage.getID());
+        future.thenAccept(onSuccess);
 
         try {
-            outputStream.writeObject(request);
+            outputStream.writeObject(networkPackage);
             outputStream.flush();
 
         } catch (Exception e) {
@@ -127,19 +132,17 @@ public class Client {
             this.requestManager = requestManager;
         }
 
-        @Override ReadThread implements Runnable
         public void run() {
             try {
                 while (true) {
                     Object obj = reader.readObject();
-                    if (obj instanceof NetworkPackage){
-                        NetworkPackage networkPackage = (NetworkPackage) obj;
+                    if (obj instanceof NetworkPackage networkPackage) {
                         switch (networkPackage.getType()) {
                             case CREATE_CHANNEL: {
                                 Channel channel = (Channel) networkPackage.getData();
                                 break;
                             }
-                            case CREATE_USER:{
+                            case CREATE_USER: {
                                 User user = (User) networkPackage.getData();
                                 break;
                             }
@@ -148,18 +151,20 @@ public class Client {
                                 break;
                             }
                             case ADD_USER_TO_CHANNEL: {
-                                try{
+                                try {
                                     AddUserWithChannel userData = (AddUserWithChannel) networkPackage.getData();
-                                    for(String username : userData.getUsernames()){
+                                    for (String username : userData.getUsernames()) {
+
                                     }
-                                } catch(Exception e){
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
                                 break;
                             }
                             case REMOVE_USER_FROM_CHANNEL: {
                                 AddUserWithChannel userData = (AddUserWithChannel) networkPackage.getData();
-                                for(String username : userData.getUsernames()){
+                                for (String username : userData.getUsernames()) {
+
                                 }
                                 break;
                             }
@@ -181,27 +186,17 @@ public class Client {
                                 break;
                             }
                             case LOGIN: {
+
+                                //TODO FIX CLIENT LOGIN
                                 User user = (User) networkPackage.getData();
                                 break;
                             }
                         }
                     }
-
-                    //dessa ska bort va
-                    if (obj instanceof Message) {
-                    if (obj instanceof NetworkPackage) {
-                        NetworkPackage msg = (NetworkPackage) obj;
-
-                        boolean isResponse = requestManager.completeRequest(msg.getID(), msg);
-                    }
-                    else if (obj instanceof Message) {
-                        Message msg = (Message) obj;
-                        System.out.println("\n[" + msg.getSender() + "]: " + msg.getContent());
-                        System.out.print("> ");
-                    }
                 }
             } catch (IOException | ClassNotFoundException e) {
                 System.out.println("\nConnection to server lost.");
+                e.printStackTrace();
             }
         }
     }

@@ -40,9 +40,9 @@ public class MessageDatabaseManager implements MessageManager {
         }
     }
     @Override
-    public List<Message> getMessagesByChannel(int channelId) {
+    public List<Message> getMessagesByChannel(int channelId) { //DENNA HAR FEL KOLUMN NAMN
         String query =
-                "SELECT M.messageTime, M.username, M.content, M.imagePath " +
+                "SELECT M.message_time, M.username, M.content, M.imagePath " +
                 "FROM Messages M " +
                 "NATURAL JOIN Users U " +
                 "WHERE M.channelID = ? " +
@@ -69,9 +69,9 @@ public class MessageDatabaseManager implements MessageManager {
     }
 
     /* Debug function, might not be used again */
-    public void printMessages() {
+    public void printMessages() { //DENNA HAR FEL KOLUMN NAMN
         String query =
-                "SELECT M.messageTime, M.username, M.content, M.imagePath, C.channelName " +
+                "SELECT M.message_Time, M.username, M.content, M.imagePath, C.channelName " +
                 "FROM Messages M " +
                 "NATURAL JOIN Channels C " +
                 "ORDER BY M.messageTime ASC";

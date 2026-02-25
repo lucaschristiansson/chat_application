@@ -17,7 +17,7 @@ public class UserClientManager implements UserManager {
     }
 
     @Override
-    public void authenticateUser(User user) {
-
+    public boolean authenticateUser(User user) {
+        return true;
     }
 }
