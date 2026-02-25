@@ -9,8 +9,8 @@ public class Main {
     public static void main() {
 
         try {
-            Server server = new Server();
-            server.start(5000);
+            Server server = new Server(5000);
+            server.start();
 
         } catch (Exception e) {
             throw new RuntimeException(e);

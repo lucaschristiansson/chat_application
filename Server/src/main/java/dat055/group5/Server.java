@@ -9,17 +9,27 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Server {
+public class Server extends Thread{
 
     // https://www.geeksforgeeks.org/java/collections-synchronizedset-method-in-java-with-examples/
     private final Set<ClientHandler> clients = Collections.synchronizedSet(new HashSet<>());
     private ServerSocket serverSocket = null;
 
-    public void start(int port) throws IOException {
+
+    public Server(int port) throws IOException{
         serverSocket = new ServerSocket(port);
         System.out.println("Server started on port " + port);
+    }
+
+    @Override
+    public void run() {
         while (true) {
-            ClientHandler clientHandler = new ClientHandler(serverSocket.accept(), this);
+            ClientHandler clientHandler = null;
+            try {
+                clientHandler = new ClientHandler(serverSocket.accept(), this);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             clients.add(clientHandler);
             clientHandler.start();
             System.out.println("relooping! thus its not blocking in while loop");
@@ -40,9 +50,7 @@ public class Server {
         System.out.println("Client disconnected.");
     }
 
-    public void stop() throws IOException {
-        serverSocket.close();
-    }
+
 
     private static class ClientHandler extends Thread {
         private final ObjectInputStream in;
@@ -148,6 +156,7 @@ public class Server {
                     break;
                 }
             }
+            server.removeClient(this);
         }
 
         public void sendMessage(Message message) {
