@@ -4,6 +4,7 @@ import dat055.group5.Packer.ChannelServerPacker;
 import dat055.group5.Packer.MessageServerPacker;
 import dat055.group5.Packer.UserServerPacker;
 import dat055.group5.manager.*;
+import dat055.group5.server.Server;
 
 import java.sql.SQLException;
 
