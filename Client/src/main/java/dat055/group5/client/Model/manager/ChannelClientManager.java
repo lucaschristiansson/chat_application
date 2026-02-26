@@ -1,9 +1,7 @@
 package dat055.group5.client.Model.manager;
 
 import dat055.group5.client.Model.Model;
-import dat055.group5.export.User;
-import dat055.group5.export.Channel;
-import dat055.group5.export.ChannelManager;
+import dat055.group5.export.*;
 
 import java.util.List;
 

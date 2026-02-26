@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ChannelDatabaseManager implements ChannelManager <String>{
+public class ChannelDatabaseManager implements ChannelManager <Channel>{
     private final Driver driver;
     private final Connection connection;
 
@@ -93,7 +93,7 @@ public class ChannelDatabaseManager implements ChannelManager <String>{
     }
 
     @Override
-    public void getChannel(String channel) {
+    public void getChannel(Channel channel) {
 
     }
 }

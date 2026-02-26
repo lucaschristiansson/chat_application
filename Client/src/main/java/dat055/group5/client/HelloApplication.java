@@ -10,9 +10,11 @@ import java.io.IOException;
 public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("views/chat-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 800, 600);
-        stage.setTitle("Chat Client");
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("views/login-view.fxml"));
+
+        Scene scene = new Scene(fxmlLoader.load(), 400, 400);
+
+        stage.setTitle("Chat Client - Login");
         stage.setScene(scene);
         stage.show();
     }
