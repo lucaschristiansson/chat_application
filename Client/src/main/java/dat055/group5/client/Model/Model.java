@@ -22,8 +22,16 @@ public class Model {
         this.clientUser = user;
     }
 
+    public Channel getActiveChannel(){
+        return activeChannel.get();
+    }
+
     public void setActiveChannel(Channel channel) {
-        this.activeChannel = channel;
+        this.activeChannel.set(channel);
+    }
+
+    public ObjectProperty<Channel> getActiveChannelProperty(){
+        return activeChannel;
     }
 
     public void addMessage(Message message) {

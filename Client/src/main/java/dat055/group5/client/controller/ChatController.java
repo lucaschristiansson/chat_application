@@ -52,8 +52,8 @@ public class ChatController {
         
         client.setMessageListener(message -> {
             Platform.runLater(() -> {
-                if (client.getSelectedChannel() != null && 
-                    message.getChannel().equals(client.getSelectedChannel().getChannelID())) {
+                if (model.getActiveChannel() != null &&
+                    message.getChannel().equals(model.getActiveChannel().getChannelID())) {
                     chatList.getItems().add(message);
                 }
             });
@@ -108,7 +108,7 @@ public class ChatController {
         System.out.println("User pressed channel: " + selectedChannel.getChannelName());
 
         currentChannelLabel.setText(selectedChannel.getChannelName());
-        client.setSelectedChannel(selectedChannel);
+        model.setActiveChannel(selectedChannel);
 
         client.sendRequestAsync(new NetworkPackage(PackageType.GET_MESSAGES_BY_CHANNEL, selectedChannel.getChannelID()), (e) ->{
             System.out.println(e.getData());
