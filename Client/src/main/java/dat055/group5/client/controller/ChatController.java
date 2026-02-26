@@ -1,6 +1,7 @@
 package dat055.group5.client.controller;
 
 import dat055.group5.client.Model.Client;
+import dat055.group5.client.Model.Model;
 import dat055.group5.client.view.components.ChannelListCell;
 import dat055.group5.client.view.components.ChatListCell;
 import dat055.group5.export.*;
@@ -16,6 +17,7 @@ import java.util.List;
 
 public class ChatController {
     private Client client;
+    private Model model;
 
     @FXML public ListView<Channel> channelList;
     @FXML private ListView<Message> chatList;
@@ -33,6 +35,16 @@ public class ChatController {
 
     @FXML
     private Label currentChannelLabel;
+
+    public void setModel(Model model) {
+        this.model = model;
+
+        channelList.setItems(model.getChannels());
+        chatList.setItems(model.getMessages());
+        userList.setItems(model.getUsersInActiveChannel());
+        currentChannelLabel.textProperty().bind(model.getActiveChannelProperty().asString());
+
+    }
 
     public void setClient(Client client){
 
@@ -106,7 +118,7 @@ public class ChatController {
                         List<Message> messages = (List<Message>) list;
                         Platform.runLater(() -> {
                             for(Message message : messages){
-                                chatList.getItems().add(message);
+                                model.addMessage(message);
                             }
                         });
                     }
@@ -156,27 +168,11 @@ public class ChatController {
 
     @FXML
     public void onSend(ActionEvent event) {
-        client.sendRequestAsync(
-                new NetworkPackage(
-                        PackageType.CREATE_MESSAGE,
-                        new Message(client.getUsername(),
-                                messageContentField.getText(),
-                                client.getSelectedChannel().getChannelID())),
-                (e) -> {
-                    System.out.println(e.getData());
-                    if(e.getType() == PackageType.CREATE_MESSAGE){
-                        try{
-                            Platform.runLater(() -> {
-                                messageContentField.clear();
-                                chatList.getItems().add((Message)e.getData());
-                            });
+        Platform.runLater(() -> {
+            client.sendMessagePackage(messageContentField.getText());
+            messageContentField.clear();
+        });
 
-                        } catch (Exception ex) {
-                            throw new RuntimeException(ex);
-                        }
-                    }
-                }
-        );
     }
 
     public void onAddUser(ActionEvent actionEvent) {

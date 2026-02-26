@@ -1,21 +1,12 @@
 package dat055.group5.client;
-import dat055.group5.client.Model.Client;
-import dat055.group5.client.Model.Packer.ChannelClientPacker;
-import dat055.group5.client.Model.Packer.MessageClientPacker;
-import dat055.group5.client.Model.Packer.UserClientPacker;
-import dat055.group5.export.Channel;
-import dat055.group5.export.Message;
 import javafx.application.Application;
-
-import java.util.List;
-
-import static java.awt.SystemColor.text;
 
 public class Launcher {
     public static void main(String[] args) {
-        Client client = new Client("127.0.0.1", 4000);
-        HelloApplication.setClient(client);
+        Driver driver = new Driver();
+        HelloApplication.setDriver(driver);
         Application.launch(HelloApplication.class, args);
+        driver.tests();
         // address and port are examples
         /*System.out.println("main runs");
         Message message = new Message("user1", "wdawd", 1);

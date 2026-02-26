@@ -1,7 +1,7 @@
 package dat055.group5.client.Model;
+import dat055.group5.client.Driver;
 import dat055.group5.client.RequestManager;
 import dat055.group5.export.*;
-import dat055.group5.client.Model.manager.*;
 
 import java.io.*;
 import java.net.*;
@@ -9,39 +9,22 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 public class Client {
+    private final RequestManager requestManager;
+    private final Model model;
+    private final Driver driver;
 
     private Socket socket;
     private ObjectOutputStream outputStream;
     private ObjectInputStream inputStream;
-    ChannelClientManager channelClientManager;
-    MessageClientManager messageClientManager;
-    UserClientManager userClientManager;
-    private final RequestManager requestManager = new RequestManager();
-    private User user;
-    private Channel selectedChannel;
     private java.util.function.Consumer<Message> messageListener;
 
-    public void setMessageListener(java.util.function.Consumer<Message> listener) {
-        this.messageListener = listener;
-    }
 
-    public void setUser(User user){
-        this.user = user;
-    }
 
-    public String getUsername(){
-        return this.user.getUsername();
-    }
+    public Client(Driver driver, String addr, int port) {
+        this.driver = driver;
+        this.requestManager = driver.getRequestManager();
+        this.model = driver.getModel();
 
-    public void setSelectedChannel(Channel channel){
-        this.selectedChannel = channel;
-    }
-
-    public Channel getSelectedChannel(){
-        return this.selectedChannel;
-    }
-
-    public Client(String addr, int port) {
         try {
             socket = new Socket(addr, port);
             if(socket.isConnected()){
@@ -59,6 +42,32 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setMessageListener(java.util.function.Consumer<Message> listener) {
+        this.messageListener = listener;
+    }
+
+    public final String getUsername(){
+        return model.getClientUser().getUsername();
+    }
+
+    public Channel getActiveChannel(){
+        return this.model.getActiveChannel();
+    }
+
+    public void sendMessagePackage(String content){
+        sendRequestAsync(
+                driver.getMessageClientPacker().addMessage(
+                        new Message(getUsername(), content, getActiveChannel().getChannelID())
+                ),
+                (networkPackage) -> {
+                    System.out.println(networkPackage.getData());
+                    if(networkPackage.getType() == PackageType.CREATE_MESSAGE){
+                        model.addMessage((Message) networkPackage.getData());
+                    }
+                }
+        );
     }
 
     public void sendNetworkPackage(NetworkPackage networkPackage){

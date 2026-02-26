@@ -1,5 +1,6 @@
 package dat055.group5.client.Model.manager;
 
+import dat055.group5.client.Driver;
 import dat055.group5.client.Model.Model;
 import dat055.group5.export.*;
 
@@ -9,10 +10,9 @@ public class ChannelClientManager implements ChannelManager <Channel>{
     List<Channel> channels;
     User user;
     Model model;
-
-    public ChannelClientManager(User user, List<Channel> channels) {
-        this.user = user;
-        this.channels = channels;
+    Driver driver;
+    public ChannelClientManager(Driver driver) {
+        this.driver = driver;
     }
 
     public void login (String userName, String password) {
@@ -21,7 +21,7 @@ public class ChannelClientManager implements ChannelManager <Channel>{
 
     @Override
     public void addChannel(Channel channel) {
-        model.addToChannelList(channel);
+        model.addToChannels(channel);
     }
 
     @Override

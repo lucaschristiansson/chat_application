@@ -3,19 +3,23 @@ package dat055.group5.client.Model;
 import dat055.group5.export.Channel;
 import dat055.group5.export.Message;
 import dat055.group5.export.User;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.util.List;
-import java.util.SimpleTimeZone;
 
 public class Model {
-    Channel activeChannel;
-    List<Channel> channels;
-    List<Message> messages;
-    List<String> usersInActiveChannel;
-    User clientUser;
+    private final ObjectProperty<Channel> activeChannel = new SimpleObjectProperty<>();
+    private final ObservableList<Channel> channels = FXCollections.observableArrayList();
+    private final ObservableList<Message> messages = FXCollections.observableArrayList();
+    private final ObservableList<String> usersInActiveChannel = FXCollections.observableArrayList();
+    private User clientUser;
 
-    public Model (Channel channel) {
-        this.activeChannel = channel;
+    public Model (Channel channel, User user) {
+        this.activeChannel.set(channel);
+        this.clientUser = user;
     }
 
     public void setActiveChannel(Channel channel) {
@@ -26,13 +30,31 @@ public class Model {
         this.messages.add(message);
     }
 
-    public void addToChannelList (Channel channel) {
+    public void addToChannels(Channel channel) {
         channels.add(channel);
     }
 
-   public void addUserToActiveChannel(String username, int channelId) {
-        if (this.activeChannel.getChannelID() == channelId)
+    public void addUserToActiveChannel(String username, int channelId) {
+        if (this.activeChannel.get().getChannelID() == channelId)
             usersInActiveChannel.add(username);
     }
 
+    public ObservableList<Channel> getChannels() {
+        return channels;
+    }
+
+    public ObservableList<Message> getMessages() {
+        return messages;
+    }
+
+    public ObservableList<String> getUsersInActiveChannel() {
+        return usersInActiveChannel;
+    }
+
+    public User getClientUser() {
+        return clientUser;
+    }
+    public void setClientUser(User user){
+        this.clientUser = user;
+    }
 }

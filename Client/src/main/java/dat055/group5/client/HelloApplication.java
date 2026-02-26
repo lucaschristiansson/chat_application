@@ -11,11 +11,12 @@ import java.io.IOException;
 
 public class HelloApplication extends Application {
 
-    private static Client appClient;
+    private static Driver driver;
 
-    public static void setClient(Client client) {
-        appClient = client;
+    public static void setDriver(Driver newDriver) {
+        driver = newDriver;
     }
+
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("views/login-view.fxml"));
@@ -23,8 +24,7 @@ public class HelloApplication extends Application {
         Scene scene = new Scene(fxmlLoader.load(), 400, 400);
 
         LoginController loginController = fxmlLoader.getController();
-
-        loginController.setClient(appClient);
+        loginController.setDriver(driver);
 
         stage.setTitle("Chat Client - Login");
         stage.setScene(scene);
