@@ -18,7 +18,7 @@ public class Driver {
 
     public Driver() {
         try {
-            Server server = new Server(5000, this);
+            Server server = new Server(4000, this);
             server.start();
 
         } catch (Exception e) {

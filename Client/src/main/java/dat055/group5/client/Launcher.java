@@ -13,7 +13,8 @@ import static java.awt.SystemColor.text;
 
 public class Launcher {
     public static void main(String[] args) {
-        //Client client = new Client("127.0.0.1", 5000);
+        Client client = new Client("127.0.0.1", 4000);
+        HelloApplication.setClient(client);
         Application.launch(HelloApplication.class, args);
         // address and port are examples
         /*System.out.println("main runs");

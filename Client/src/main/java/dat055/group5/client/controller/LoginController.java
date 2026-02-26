@@ -1,5 +1,10 @@
 package dat055.group5.client.controller;
 
+import dat055.group5.client.Model.Client;
+import dat055.group5.export.Actions;
+import dat055.group5.export.NetworkPackage;
+import dat055.group5.export.PackageType;
+import dat055.group5.export.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +20,8 @@ import java.io.IOException;
 
 public class LoginController {
 
+    private Client client;
+
     @FXML
     private TextField usernameField;
 
@@ -23,6 +30,10 @@ public class LoginController {
 
     @FXML
     private Label errorLabel;
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
 
     @FXML
     public void onLogin(ActionEvent event) {
@@ -35,6 +46,11 @@ public class LoginController {
         }
 
         try {
+            NetworkPackage request = client.sendRequestBlocking(PackageType.LOGIN, new User(username, password));
+            if(request == null || !(boolean)request.getData()){
+                errorLabel.setText("Wrong username or password");
+                return;
+            }
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/dat055/group5/client/views/chat-view.fxml"));
             Parent chatRoot = loader.load();
 

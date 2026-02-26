@@ -99,8 +99,7 @@ public class Client {
         NetworkPackage request = new NetworkPackage(type, payload);
         CompletableFuture<NetworkPackage> future = requestManager.registerRequest(request.getID());
         try {
-            outputStream.writeObject(request);
-            outputStream.flush();
+            sendNetworkPackage(request);
             return future.get(5, TimeUnit.SECONDS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -115,8 +114,7 @@ public class Client {
         future.thenAccept(onSuccess);
 
         try {
-            outputStream.writeObject(networkPackage);
-            outputStream.flush();
+            sendNetworkPackage(networkPackage);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -137,6 +135,7 @@ public class Client {
                 while (true) {
                     Object obj = reader.readObject();
                     if (obj instanceof NetworkPackage networkPackage) {
+                        boolean isResponse = requestManager.completeRequest(networkPackage.getID(), networkPackage);
                         switch (networkPackage.getType()) {
                             case CREATE_CHANNEL: {
                                 Channel channel = (Channel) networkPackage.getData();
