@@ -115,7 +115,7 @@ public class ClientHandler extends Thread{
                         case LOGIN: {
                             User user = (User) networkPackage.getData();
 
-                            NetworkPackage response = new NetworkPackage(PackageType.VERIFY, false);
+                            NetworkPackage response = new NetworkPackage(PackageType.LOGIN, false);
 
                             response.setID(networkPackage.getID());
 

@@ -190,6 +190,9 @@ public class Client {
                             }
                             case GET_MESSAGES_BY_CHANNEL: {
                                 List<Message> messages = (List<Message>) networkPackage.getData();
+                                for (Message message : messages) {
+                                    System.out.println(message.getContent());
+                                }
                                 break;
                             }
                             case GET_USERS: {
