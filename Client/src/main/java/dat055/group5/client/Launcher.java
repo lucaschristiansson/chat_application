@@ -5,6 +5,7 @@ import dat055.group5.client.Model.Packer.MessageClientPacker;
 import dat055.group5.client.Model.Packer.UserClientPacker;
 import dat055.group5.export.Channel;
 import dat055.group5.export.Message;
+import dat055.group5.export.User;
 import javafx.application.Application;
 
 import java.util.List;
@@ -12,22 +13,17 @@ import java.util.List;
 import static java.awt.SystemColor.text;
 
 public class Launcher {
+    //private final RequestManager requestManager = new RequestManager();
+
     public static void main(String[] args) {
         //Application.launch(HelloApplication.class, args);
         // address and port are examples
-        System.out.println("main runs");
-        Client client = new Client("127.0.0.1", 5000);
-        Message message = new Message("user1", "wdawd", 1);
-        MessageClientPacker messageClientPacker = new MessageClientPacker();
-        ChannelClientPacker channelClientPacker = new ChannelClientPacker();
-        UserClientPacker userClientPacker = new UserClientPacker();
+        ClientDriver driver = new ClientDriver();
+        driver.tests();
 
-        client.sendRequestAsync(messageClientPacker.addMessage(message),
-                (_) -> System.out.println("success!!")
-        );
-        client.sendRequestAsync(messageClientPacker.getMessagesByChannel(1),
-                (_) -> System.out.println("success!!")
-        );
+
+
+
 
     }
 

@@ -1,4 +1,5 @@
 package dat055.group5.client.Model;
+import dat055.group5.client.ClientDriver;
 import dat055.group5.client.RequestManager;
 import dat055.group5.export.*;
 import dat055.group5.client.Model.manager.ChannelClientManager;
@@ -22,9 +23,13 @@ public class Client {
     ChannelClientManager channelClientManager;
     MessageClientManager messageClientManager;
     UserClientManager userClientManager;
-    private final RequestManager requestManager = new RequestManager();
+    private final ClientDriver driver;
+    private final RequestManager requestManager;
 
-    public Client(String addr, int port) {
+    public Client(ClientDriver driver, String addr, int port) {
+        this.driver = driver;
+        this.requestManager = driver.getRequestManager();
+
         try {
             socket = new Socket(addr, port);
             if(socket.isConnected()){
@@ -137,20 +142,27 @@ public class Client {
                 while (true) {
                     Object obj = reader.readObject();
                     if (obj instanceof NetworkPackage networkPackage) {
+                        requestManager.completeRequest(networkPackage.getID(), networkPackage);
+
                         switch (networkPackage.getType()) {
                             case CREATE_CHANNEL: {
+                                //no response
                                 Channel channel = (Channel) networkPackage.getData();
                                 break;
                             }
                             case CREATE_USER: {
+                                //no response
                                 User user = (User) networkPackage.getData();
+
                                 break;
                             }
                             case CREATE_MESSAGE: {
+                                //no response
                                 Message message = (Message) networkPackage.getData();
                                 break;
                             }
                             case ADD_USER_TO_CHANNEL: {
+                                //no response
                                 try {
                                     AddUserWithChannel userData = (AddUserWithChannel) networkPackage.getData();
                                     for (String username : userData.getUsernames()) {
@@ -162,6 +174,7 @@ public class Client {
                                 break;
                             }
                             case REMOVE_USER_FROM_CHANNEL: {
+                                //no response
                                 AddUserWithChannel userData = (AddUserWithChannel) networkPackage.getData();
                                 for (String username : userData.getUsernames()) {
 
@@ -170,7 +183,9 @@ public class Client {
                             }
                             case GET_CHANNELS_FOR_USER: {
                                 Channel channel = (Channel) networkPackage.getData();
+
                                 channelClientManager.getChannel(channel);
+
                                 break;
                             }
                             case GET_MESSAGES_BY_CHANNEL: {
@@ -188,10 +203,17 @@ public class Client {
                             case LOGIN: {
 
                                 //TODO FIX CLIENT LOGIN
-                                User user = (User) networkPackage.getData();
+                                boolean success = (Boolean) networkPackage.getData();
+                                if(!success){
+                                    System.out.println("unsuccessful login!");
+                                }else{
+                                    System.out.println("successful login!");
+                                }
                                 break;
                             }
                         }
+
+
                     }
                 }
             } catch (IOException | ClassNotFoundException e) {

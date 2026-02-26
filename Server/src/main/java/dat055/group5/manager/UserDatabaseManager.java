@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.concurrent.CompletableFuture;
 
 import dat055.group5.export.User;
 import dat055.group5.export.UserManager;
@@ -60,7 +61,7 @@ public class UserDatabaseManager implements UserManager {
 
     @Override
     public boolean authenticateUser(User user){
-        String sql = "SELECT 1 FROM Users WHERE username =? AND password =?";
+        String sql = "SELECT 1 FROM Users WHERE username = ? AND password = ?";
         try(PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getPassword());

@@ -16,7 +16,7 @@ CREATE TABLE UsersInChannel(
 );
 
 CREATE TABLE Messages(
-    --message_id SERIAL PRIMARY KEY,
+    message_id SERIAL PRIMARY KEY,
     message_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     username TEXT REFERENCES Users(username) ON DELETE CASCADE,
     channel_id INT REFERENCES Channels(channel_id) ON DELETE CASCADE,

@@ -52,6 +52,11 @@ public class ClientHandler extends Thread{
                 /*TODO*/
                 // Create a enum for the different types of network packages
                 if (obj instanceof NetworkPackage networkPackage) {
+
+                    if(!verified && networkPackage.getType() != PackageType.LOGIN){
+                        continue;
+                    }
+
                     switch (networkPackage.getType()) {
                         case CREATE_CHANNEL: {
                             Channel channel = (Channel) networkPackage.getData();
@@ -113,6 +118,7 @@ public class ClientHandler extends Thread{
                             NetworkPackage response = new NetworkPackage(PackageType.VERIFY, false);
 
                             response.setID(networkPackage.getID());
+
 
                             if(userDatabaseManager.authenticateUser(user)){
                                 username = user.getUsername();

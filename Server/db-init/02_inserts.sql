@@ -4,8 +4,8 @@ INSERT INTO Users (username, password) VALUES
     ('user3', 'password3');
 
 INSERT INTO Channels (channel_name) VALUES
-    ('Channel1'),
-    ('Channel2');
+    ( 'Channel0'),
+    ( 'Channel1');
 
 INSERT INTO UsersInChannel (username, channel_id) VALUES
     ('user1', 1),

@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.SimpleTimeZone;
 
 public class Model {
-    Channel activeChannel;
-    List<Channel> channels;
-    List<Message> messages;
-    List<String> usersInActiveChannel;
-    User clientUser;
+    private Channel activeChannel;
+    private List<Channel> channels;
+    private List<Message> messages;
+    private List<String> usersInActiveChannel;
+    private User clientUser;
 
     public Model (Channel channel) {
         this.activeChannel = channel;

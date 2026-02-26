@@ -42,11 +42,11 @@ public class MessageDatabaseManager implements MessageManager {
     @Override
     public List<Message> getMessagesByChannel(int channelId) { //DENNA HAR FEL KOLUMN NAMN
         String query =
-                "SELECT M.message_time, M.username, M.content, M.imagePath " +
+                "SELECT M.message_time, M.username, M.content, M.image_path " +
                 "FROM Messages M " +
                 "NATURAL JOIN Users U " +
-                "WHERE M.channelID = ? " +
-                "ORDER BY M.messageTime ASC";
+                "WHERE M.channel_id = ? " +
+                "ORDER BY M.message_time ASC";
 
         List<Message> messages = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -56,9 +56,9 @@ public class MessageDatabaseManager implements MessageManager {
                     messages.add(new Message(
                             rs.getString("username"),
                             rs.getString("content"),
-                            rs.getTimestamp("messageTime").toInstant(),
+                            rs.getTimestamp("message_time").toInstant(),
                             channelId,
-                            rs.getString("imagePath")
+                            rs.getString("image_path")
                     ));
                 }
             }
@@ -71,20 +71,20 @@ public class MessageDatabaseManager implements MessageManager {
     /* Debug function, might not be used again */
     public void printMessages() { //DENNA HAR FEL KOLUMN NAMN
         String query =
-                "SELECT M.message_Time, M.username, M.content, M.imagePath, C.channelName " +
+                "SELECT M.message_time, M.username, M.content, M.image_path, C.channel_name " +
                 "FROM Messages M " +
                 "NATURAL JOIN Channels C " +
-                "ORDER BY M.messageTime ASC";
+                "ORDER BY M.message_time ASC";
 
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
 
             while (rs.next()) {
-                String time = rs.getString("messageTime");
+                String time = rs.getString("message_time");
                 String sender = rs.getString("username");
                 String content = rs.getString("content");
-                String image = rs.getString("imagePath");
-                String channel = rs.getString("channelName");
+                String image = rs.getString("image_path");
+                String channel = rs.getString("channel_name");
 
                 System.out.println("--------------------------------");
                 System.out.println(content);
