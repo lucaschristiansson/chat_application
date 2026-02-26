@@ -1,23 +1,29 @@
 package dat055.group5.client.controller;
 
+import dat055.group5.client.Model.Client;
 import dat055.group5.client.view.components.ChannelListCell;
 import dat055.group5.client.view.components.ChatListCell;
-import dat055.group5.export.Channel;
-import dat055.group5.export.Message;
+import dat055.group5.export.*;
+import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SplitPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.application.Platform;
+
+import java.util.List;
 
 
 public class ChatController {
+    private Client client;
 
     @FXML public ListView<Channel> channelList;
     @FXML private ListView<Message> chatList;
+    @FXML private ListView<String> userList;
     @FXML
     private SplitPane mainSplitPane;
+
+    @FXML private TextArea messageContentField;
 
     @FXML
     private VBox channelsVBox;
@@ -28,12 +34,104 @@ public class ChatController {
     @FXML
     private Label currentChannelLabel;
 
+    public void setClient(Client client){
+
+        this.client = client;
+        
+        client.setMessageListener(message -> {
+            Platform.runLater(() -> {
+                if (client.getSelectedChannel() != null && 
+                    message.getChannel().equals(client.getSelectedChannel().getChannelID())) {
+                    chatList.getItems().add(message);
+                }
+            });
+        });
+        client.sendRequestAsync(new NetworkPackage(PackageType.GET_CHANNELS_FOR_USER, client.getUsername()), (e) ->{
+            System.out.println(e.getData());
+            if(e.getType() == PackageType.GET_CHANNELS_FOR_USER){
+                try{
+                    if(e.getData() instanceof List<?> list){
+                        List<Channel> channels = (List<Channel>) list;
+                        Platform.runLater(() -> {
+                            for(Channel channel : channels){
+                                channelList.getItems().add(channel);
+                            }
+                        });
+                    }
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+
+    }
+
     @FXML
     public void initialize() {
         chatList.setCellFactory(_ -> new ChatListCell());
         channelList.setCellFactory(_ -> new ChannelListCell());
 
-        chatList.getItems().add(new Message("Theo", "hej", 0));
+        channelList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                onChannelSelected(newValue);
+            }
+        });
+
+        chatList.getItems().addListener((ListChangeListener<Message>) change -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    Platform.runLater(() -> {
+                        Platform.runLater(() -> {
+                            chatList.scrollTo(chatList.getItems().size() - 1);
+                        });
+                    });
+                    break;
+                }
+            }
+        });
+
+    }
+
+    private void onChannelSelected(Channel selectedChannel) {
+        System.out.println("User pressed channel: " + selectedChannel.getChannelName());
+
+        currentChannelLabel.setText(selectedChannel.getChannelName());
+        client.setSelectedChannel(selectedChannel);
+
+        client.sendRequestAsync(new NetworkPackage(PackageType.GET_MESSAGES_BY_CHANNEL, selectedChannel.getChannelID()), (e) ->{
+            System.out.println(e.getData());
+            if(e.getType() == PackageType.GET_MESSAGES_BY_CHANNEL){
+                try{
+                    if(e.getData() instanceof List<?> list){
+                        List<Message> messages = (List<Message>) list;
+                        Platform.runLater(() -> {
+                            for(Message message : messages){
+                                chatList.getItems().add(message);
+                            }
+                        });
+                    }
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+        client.sendRequestAsync(new NetworkPackage(PackageType.GET_USER_IN_CHANNEL, selectedChannel.getChannelID()), (e) ->{
+            System.out.println(e.getData());
+            if(e.getType() == PackageType.GET_USER_IN_CHANNEL){
+                try{
+                    if(e.getData() instanceof List<?> list){
+                        List<String> users = (List<String>) list;
+                        Platform.runLater(() -> {
+                            for(String user : users){
+                                userList.getItems().add(user);
+                            }
+                        });
+                    }
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
     }
 
     @FXML
@@ -41,7 +139,7 @@ public class ChatController {
         if (mainSplitPane.getItems().contains(channelsVBox)) {
             mainSplitPane.getItems().remove(channelsVBox);
         } else {
-            mainSplitPane.getItems().add(0, channelsVBox);
+            mainSplitPane.getItems().addFirst( channelsVBox);
             mainSplitPane.setDividerPosition(0, 0.2);
         }
     }
@@ -51,13 +149,34 @@ public class ChatController {
         if (mainSplitPane.getItems().contains(usersVBox)) {
             mainSplitPane.getItems().remove(usersVBox);
         } else {
-            mainSplitPane.getItems().add(usersVBox);
+            mainSplitPane.getItems().addLast(usersVBox);
             mainSplitPane.setDividerPosition(mainSplitPane.getDividers().size() - 1, 0.8);
         }
     }
 
     @FXML
     public void onSend(ActionEvent event) {
+        client.sendRequestAsync(
+                new NetworkPackage(
+                        PackageType.CREATE_MESSAGE,
+                        new Message(client.getUsername(),
+                                messageContentField.getText(),
+                                client.getSelectedChannel().getChannelID())),
+                (e) -> {
+                    System.out.println(e.getData());
+                    if(e.getType() == PackageType.CREATE_MESSAGE){
+                        try{
+                            Platform.runLater(() -> {
+                                messageContentField.clear();
+                                chatList.getItems().add((Message)e.getData());
+                            });
+
+                        } catch (Exception ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }
+                }
+        );
     }
 
     public void onAddUser(ActionEvent actionEvent) {

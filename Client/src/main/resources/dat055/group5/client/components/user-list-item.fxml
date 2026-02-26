@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox fx:id="parent" alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="150.0" spacing="10.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dat055.group5.client.controller.ChannelListItemController">
+    <children>
+        <Label fx:id="userNameLabel" text="user">
+            <font>
+                <Font name="JetBrains Mono Regular" size="14.0" />
+            </font>
+        </Label>
+    </children>
+</HBox>

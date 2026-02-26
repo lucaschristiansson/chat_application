@@ -21,7 +21,7 @@ public class ChannelDatabaseManager implements ChannelManager <Channel>{
     }
     @Override
     public void addChannel(Channel channel) {
-        String sql = "INSERT INTO Channels (channelID, channelName) VALUES (?, ?)";
+        String sql = "INSERT INTO Channels (channel_id, channel_name) VALUES (?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, channel.getChannelID());
             ps.setString(2, channel.getChannelName());
@@ -33,7 +33,7 @@ public class ChannelDatabaseManager implements ChannelManager <Channel>{
     }
     @Override
     public void addUserToChannel(String username, int channelID) {
-        String sql = "INSERT INTO UsersInChannel (username, channelID) VALUES (?, ?)";
+        String sql = "INSERT INTO UsersInChannel (username, channel_id) VALUES (?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, username);
             ps.setInt(2, channelID);
@@ -45,7 +45,7 @@ public class ChannelDatabaseManager implements ChannelManager <Channel>{
     }
     @Override
     public void removeUserFromChannel(String username, int channelID) {
-        String sql = "DELETE FROM UsersInChannel WHERE username = ? AND channelID = ?";
+        String sql = "DELETE FROM UsersInChannel WHERE username = ? AND channel_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, username);
             ps.setInt(2, channelID);
@@ -65,7 +65,7 @@ public class ChannelDatabaseManager implements ChannelManager <Channel>{
 
             try (var rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    channels.add(new Channel(rs.getInt("channelID"),rs.getString("channelName")));
+                    channels.add(new Channel(rs.getInt("channel_id"),rs.getString("channel_name")));
                 }
             }
         } catch (SQLException e) {
@@ -75,7 +75,7 @@ public class ChannelDatabaseManager implements ChannelManager <Channel>{
     }
     @Override
     public List<String> getAllUsersInChannel(int channelID) {
-        String sql = "SELECT username FROM UsersInChannel WHERE channelID = ?";
+        String sql = "SELECT username FROM UsersInChannel WHERE channel_id = ?";
         List<String> users = new ArrayList<>();
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {

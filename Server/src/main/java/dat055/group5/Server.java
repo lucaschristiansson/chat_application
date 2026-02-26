@@ -6,10 +6,7 @@ import dat055.group5.manager.*;
 
 import java.net.*;
 import java.io.*;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Server extends Thread{
 
@@ -45,6 +42,26 @@ public class Server extends Thread{
                 client.sendPackage(networkPackage);
                 System.out.println(client);
             }
+        }
+    }
+    public void broadcastToChannel(NetworkPackage networkPackage, Integer channelID) {
+
+        Collection<String> usersInChannel = driver.getChannelDatabaseManager().getAllUsersInChannel(channelID);
+
+        Set<String> channelUsersSet = new HashSet<>(usersInChannel);
+
+        List<ClientHandler> targetClients = new ArrayList<>();
+
+        synchronized (clients) {
+            for (ClientHandler client : clients) {
+                if (channelUsersSet.contains(client.username)) {
+                    targetClients.add(client);
+                }
+            }
+        }
+
+        for (ClientHandler target : targetClients) {
+            target.sendPackage(networkPackage);
         }
     }
 
@@ -92,12 +109,11 @@ public class Server extends Thread{
             while (!clientSocket.isClosed() && clientSocket.isConnected()) {
                 try {
                     Object obj = in.readObject();
-                    /*TODO*/
-                    // Create a enum for the different types of network packages
                     if (obj instanceof NetworkPackage networkPackage) {
                         switch (networkPackage.getType()) {
                             case CREATE_CHANNEL: {
                                 Channel channel = (Channel) networkPackage.getData();
+
                                 channelDatabaseManager.addChannel(channel);
                                 break;
                             }
@@ -109,6 +125,7 @@ public class Server extends Thread{
                             case CREATE_MESSAGE: {
                                 Message message = (Message) networkPackage.getData();
                                 messageDatabaseManager.addMessage(message);
+                                server.broadcastToChannel(networkPackage, message.getChannel());
                                 break;
                             }
                             case ADD_USER_TO_CHANNEL: {
@@ -130,32 +147,41 @@ public class Server extends Thread{
                                 break;
                             }
                             case GET_CHANNELS_FOR_USER: {
-                                String username = (String) networkPackage.getData();
-                                channelDatabaseManager.getAllChannelsForUser(username);
+                                String user = (String) networkPackage.getData();
+                                NetworkPackage response = new NetworkPackage(
+                                        networkPackage.getID(),
+                                        PackageType.GET_CHANNELS_FOR_USER,
+                                        channelDatabaseManager.getAllChannelsForUser(user));
+                                sendPackage(response);
                                 break;
                             }
                             case GET_MESSAGES_BY_CHANNEL: {
                                 Integer channelID = (Integer) networkPackage.getData();
-                                List<Message> messages = messageDatabaseManager.getMessagesByChannel(channelID);
-                                NetworkPackage sendNetworkPackage = driver.getMessageServerPacker().getMessagesByChannel(messages);
-                                sendPackage(sendNetworkPackage);
+                                NetworkPackage response = new NetworkPackage(
+                                        networkPackage.getID(),
+                                        PackageType.GET_MESSAGES_BY_CHANNEL,
+                                        messageDatabaseManager.getMessagesByChannel(channelID));
+                                sendPackage(response);
                                 break;
                             }
                             case GET_USERS: {
                                 userDatabaseManager.getUsers();
                                 break;
                             }
+
                             case GET_USER_IN_CHANNEL: {
-                                Integer channel_id = (Integer) networkPackage.getData();
-                                List<String> messages = channelDatabaseManager.getAllUsersInChannel(channel_id);
+                                Integer channelID = (Integer) networkPackage.getData();
+                                NetworkPackage response = new NetworkPackage(
+                                        networkPackage.getID(),
+                                        PackageType.GET_USER_IN_CHANNEL,
+                                        channelDatabaseManager.getAllUsersInChannel(channelID));
+                                sendPackage(response);
                                 break;
                             }
                             case LOGIN: {
                                 User user = (User) networkPackage.getData();
 
-                                NetworkPackage response = new NetworkPackage(PackageType.VERIFY, false);
-
-                                response.setID(networkPackage.getID());
+                                NetworkPackage response = new NetworkPackage(networkPackage.getID(),PackageType.VERIFY, false);
 
                                 if(userDatabaseManager.authenticateUser(user)){
                                     username = user.getUsername();

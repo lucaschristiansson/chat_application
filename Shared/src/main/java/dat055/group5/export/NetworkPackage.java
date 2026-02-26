@@ -11,11 +11,15 @@ public class NetworkPackage implements Serializable {
 
 
     public NetworkPackage (PackageType type, Object data) {
-        id = UUID.randomUUID();
+        this.id = UUID.randomUUID();
         this.type = type;
         this.data = data;
     }
-
+    public NetworkPackage (UUID id,PackageType type, Object data) {
+        this.id = id;
+        this.type = type;
+        this.data = data;
+    }
 
     public UUID getID(){
         return id;

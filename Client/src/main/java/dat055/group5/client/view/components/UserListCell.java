@@ -1,26 +1,28 @@
 package dat055.group5.client.view.components;
 
 import dat055.group5.client.controller.ChannelListItemController;
+import dat055.group5.client.controller.UserListItemController;
 import dat055.group5.export.Channel;
+import dat055.group5.export.User;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ListCell;
 
 import java.io.IOException;
 
-public class ChannelListCell extends ListCell<Channel> {
+public class UserListCell extends ListCell<String> {
 
     private FXMLLoader loader;
-    private ChannelListItemController channelListItemController;
+    private UserListItemController userListItemController;
 
-    public ChannelListCell() {
+    public UserListCell() {
         // initialization if needed
     }
 
     @Override
-    protected void updateItem(Channel channel, boolean empty) {
-        super.updateItem(channel, empty);
+    protected void updateItem(String username, boolean empty) {
+        super.updateItem(username, empty);
 
-        if (empty || channel == null) {
+        if (empty || username == null) {
             setText(null);
             setGraphic(null);
         } else {
@@ -30,15 +32,15 @@ public class ChannelListCell extends ListCell<Channel> {
                 loader = new FXMLLoader(getClass().getResource("/dat055/group5/client/components/channel-list-item.fxml"));
                 try {
                     loader.load();
-                    channelListItemController = loader.getController();
+                    userListItemController = loader.getController();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
 
-            channelListItemController.updateUI(channel);
+            userListItemController.updateUI(username);
 
-            setGraphic(channelListItemController.getParent());
+            setGraphic(userListItemController.getParent());
         }
     }
 }

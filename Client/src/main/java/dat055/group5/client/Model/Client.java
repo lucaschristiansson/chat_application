@@ -1,28 +1,45 @@
 package dat055.group5.client.Model;
 import dat055.group5.client.RequestManager;
 import dat055.group5.export.*;
-import dat055.group5.client.Model.manager.ChannelClientManager;
-import dat055.group5.client.Model.manager.MessageClientManager;
-import dat055.group5.client.Model.manager.UserClientManager;
-import dat055.group5.export.*;
+import dat055.group5.client.Model.manager.*;
 
 import java.io.*;
 import java.net.*;
-import java.util.List;
-import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 public class Client {
-    //initialize socket and input/output streams
+
     private Socket socket;
     private ObjectOutputStream outputStream;
     private ObjectInputStream inputStream;
-    private Scanner scanner;
     ChannelClientManager channelClientManager;
     MessageClientManager messageClientManager;
     UserClientManager userClientManager;
     private final RequestManager requestManager = new RequestManager();
+    private User user;
+    private Channel selectedChannel;
+    private java.util.function.Consumer<Message> messageListener;
+
+    public void setMessageListener(java.util.function.Consumer<Message> listener) {
+        this.messageListener = listener;
+    }
+
+    public void setUser(User user){
+        this.user = user;
+    }
+
+    public String getUsername(){
+        return this.user.getUsername();
+    }
+
+    public void setSelectedChannel(Channel channel){
+        this.selectedChannel = channel;
+    }
+
+    public Channel getSelectedChannel(){
+        return this.selectedChannel;
+    }
 
     public Client(String addr, int port) {
         try {
@@ -34,8 +51,6 @@ public class Client {
                 throw new SocketException();
             }
 
-            scanner = new Scanner(System.in);
-
             outputStream = new ObjectOutputStream(socket.getOutputStream());
             inputStream = new ObjectInputStream(socket.getInputStream());
 
@@ -43,45 +58,7 @@ public class Client {
 
         } catch (IOException e) {
             e.printStackTrace();
-            return;
         }
-        System.out.println("Type your message (or 'Over' to quit):");
-        /*
-        while (true) {
-            if (scanner.hasNextLine()) {
-                String username = scanner.nextLine();
-                String password = scanner.nextLine();
-
-                User user = new User(username, password);
-
-                    Message msg = new Message("user1", text, 1);
-                    NetworkPackage networkPackage = new NetworkPackage(PackageType.CREATE_MESSAGE, msg);
-
-                    outputStream.writeObject(networkPackage);
-                    outputStream.flush();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                break;
-                NetworkPackage input = sendRequestBlocking(Actions.AUTH, user);
-                if (input != null && (boolean)input.getData()) {
-                    Syst ReadThread implements Runnable em.out.println("Login Successful!");
-                    break;
-                } else {
-                    System.out.println("Login Failed.");
-                }
-            }
-        }
-
-        try {
-            if (scanner  ReadThread implements Runnable != null) scanner.close();
-            if (outputStream != null) outputStream.close();
-            if (socket != null) socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-     */
     }
 
     public void sendNetworkPackage(NetworkPackage networkPackage){
@@ -92,8 +69,6 @@ public class Client {
             throw new RuntimeException(e);
         }
     }
-
-
 
     public NetworkPackage sendRequestBlocking(PackageType type, Object payload) {
         NetworkPackage request = new NetworkPackage(type, payload);
@@ -108,7 +83,6 @@ public class Client {
     }
 
     public void sendRequestAsync(NetworkPackage networkPackage, java.util.function.Consumer<NetworkPackage> onSuccess) {
-
 
         CompletableFuture<NetworkPackage> future = requestManager.registerRequest(networkPackage.getID());
         future.thenAccept(onSuccess);
@@ -136,6 +110,17 @@ public class Client {
                     Object obj = reader.readObject();
                     if (obj instanceof NetworkPackage networkPackage) {
                         boolean isResponse = requestManager.completeRequest(networkPackage.getID(), networkPackage);
+
+                        if(!isResponse){
+                            switch (networkPackage.getType()){
+                                case PackageType.CREATE_MESSAGE -> {
+                                    if (Client.this.messageListener != null && networkPackage.getData() instanceof Message) {
+                                        Client.this.messageListener.accept((Message) networkPackage.getData());
+                                    }
+                                }
+                            }
+                        }
+                        /*
                         switch (networkPackage.getType()) {
                             case CREATE_CHANNEL: {
                                 Channel channel = (Channel) networkPackage.getData();
@@ -168,8 +153,8 @@ public class Client {
                                 break;
                             }
                             case GET_CHANNELS_FOR_USER: {
-                                Channel channel = (Channel) networkPackage.getData();
-                                channelClientManager.getChannel(channel);
+                                // Channel channel = (Channel) networkPackage.getData();
+                                // channelClientManager.getChannel(channel);
                                 break;
                             }
                             case GET_MESSAGES_BY_CHANNEL: {
@@ -180,17 +165,13 @@ public class Client {
 
                                 break;
                             }
-                            case GET_USER_IN_CHANNEL: {
-                                Integer channel_id = (Integer) networkPackage.getData();
-                                break;
-                            }
                             case LOGIN: {
 
                                 //TODO FIX CLIENT LOGIN
                                 User user = (User) networkPackage.getData();
                                 break;
                             }
-                        }
+                        }*/
                     }
                 }
             } catch (IOException | ClassNotFoundException e) {

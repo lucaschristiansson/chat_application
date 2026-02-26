@@ -10,8 +10,9 @@ public class MessageClientManager implements MessageManager {
     Model model;
 
     @Override
-    public void addMessage(Message message) {
+    public boolean addMessage(Message message) {
         model.addMessage(message);
+        return true;
     }
 
     @Override
@@ -19,8 +20,4 @@ public class MessageClientManager implements MessageManager {
         return List.of();
     }
 
-    @Override
-    public void printMessages() {
-
-    }
 }

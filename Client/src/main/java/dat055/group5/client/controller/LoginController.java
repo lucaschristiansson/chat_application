@@ -1,7 +1,6 @@
 package dat055.group5.client.controller;
 
 import dat055.group5.client.Model.Client;
-import dat055.group5.export.Actions;
 import dat055.group5.export.NetworkPackage;
 import dat055.group5.export.PackageType;
 import dat055.group5.export.User;
@@ -46,17 +45,25 @@ public class LoginController {
         }
 
         try {
-            NetworkPackage request = client.sendRequestBlocking(PackageType.LOGIN, new User(username, password));
+            User user = new User(username, password);
+            NetworkPackage request = client.sendRequestBlocking(PackageType.LOGIN, user);
             if(request == null || !(boolean)request.getData()){
                 errorLabel.setText("Wrong username or password");
                 return;
             }
+            client.setUser(user);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/dat055/group5/client/views/chat-view.fxml"));
             Parent chatRoot = loader.load();
+
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
             Scene chatScene = new Scene(chatRoot, 900, 600);
+
+            ChatController chatController = loader.getController();
+
+            chatController.setClient(client);
+
             stage.setScene(chatScene);
             stage.centerOnScreen();
             stage.show();
