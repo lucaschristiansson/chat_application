@@ -95,7 +95,11 @@ public class ChatController {
                 }
             }
         });
-
+/*      //MARCUS NEW APPROACH::::
+        client.sendRequestAsync(driver.getChannelClientPacker().getAllChannelsForUser(client.getUsername()), (e) ->{
+            driver.getChannelClientManager().addChannel(e.getData());
+        });
+*/
     }
 
     @FXML

@@ -10,10 +10,6 @@ import java.util.List;
  * Helt oanvänd klass, vänligen ignorera.
  */
 public class ChannelClientManager implements ChannelManager <Channel>{
-    //denna klass är broken :)
-    List<Channel> channels;
-    User user;
-    Model model;
     Driver driver;
     public ChannelClientManager(Driver driver) {
         this.driver = driver;
@@ -21,12 +17,12 @@ public class ChannelClientManager implements ChannelManager <Channel>{
 
     @Override
     public void addChannel(Channel channel) {
-        model.addToChannels(channel);
+        driver.getModel().addToChannels(channel);
     }
 
     @Override
     public void addUserToChannel(String username, int channelId) {
-        model.addUserToActiveChannel(username, channelId);
+        driver.getModel().addUserToActiveChannel(username, channelId);
     }
 
     @Override
@@ -49,6 +45,6 @@ public class ChannelClientManager implements ChannelManager <Channel>{
     @Override
     public void getChannel(Channel channel) {
         //TODO: this method makes no sense.
-        model.setActiveChannel(channel);
+        driver.getModel().setActiveChannel(channel);
     }
 }

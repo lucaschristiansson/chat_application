@@ -203,3 +203,11 @@ public class Client {
     }
 }
 
+/**
+ * add images support
+ * add more javadocs
+ * add channels
+ *
+ *
+ * after that we can add functionality for new users
+ */
