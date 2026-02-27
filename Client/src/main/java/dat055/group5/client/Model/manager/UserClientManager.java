@@ -4,7 +4,7 @@ import dat055.group5.export.User;
 import dat055.group5.export.UserManager;
 
 import java.util.List;
-
+//TODO Behöver vi denna?
 public class UserClientManager implements UserManager {
     @Override
     public List<String> getUsers() {

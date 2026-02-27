@@ -17,6 +17,10 @@ public class ChannelListItemController {
     @FXML
     private Label channelNameLabel;
 
+    /**
+     * Ändrar namn på Channel objekt i Channels listan
+     * @param channel
+     */
     public void updateUI(Channel channel) {
         this.channel = channel;
         channelNameLabel.setText("# " + channel.getChannelName());

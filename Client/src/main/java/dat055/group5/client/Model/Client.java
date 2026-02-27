@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Ansvarar för
+ */
 public class Client {
     private final RequestManager requestManager;
     private final Model model;
@@ -19,6 +22,12 @@ public class Client {
     private ObjectInputStream inputStream;
     private java.util.function.Consumer<Message> messageListener;
 
+    /**
+     *
+     * @param driver
+     * @param addr
+     * @param port
+     */
 
 
     public Client(Driver driver, String addr, int port) {
@@ -70,7 +79,7 @@ public class Client {
                 }
         );
     }
-
+    //TODO NetworkPackages ska flyttas till specifika metoder i Managers
     public void sendNetworkPackage(NetworkPackage networkPackage){
         try {
             outputStream.writeObject(networkPackage);

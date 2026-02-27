@@ -2,6 +2,7 @@ package dat055.group5.client.controller;
 
 import dat055.group5.client.Model.Client;
 import dat055.group5.client.Model.Model;
+import dat055.group5.client.Driver;
 import dat055.group5.client.view.components.ChannelListCell;
 import dat055.group5.client.view.components.ChatListCell;
 import dat055.group5.export.*;
@@ -13,12 +14,14 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.application.Platform;
 
+
 import java.util.List;
 
 
 public class ChatController {
     private Client client;
     private Model model;
+    private Driver driver;
 
     @FXML public ListView<Channel> channelList;
     @FXML private ListView<Message> chatList;
@@ -39,7 +42,6 @@ public class ChatController {
 
     public void setModel(Model model) {
         this.model = model;
-
         channelList.setItems(model.getChannels());
         chatList.setItems(model.getMessages());
         userList.setItems(model.getUsersInActiveChannel());
@@ -56,6 +58,10 @@ public class ChatController {
                 }
             }
         });
+    }
+
+    public void setDriver(Driver driver) {
+        this.driver = driver;
     }
 
     public void setClient(Client client){
@@ -120,6 +126,8 @@ public class ChatController {
         //currentChannelLabel.setText(selectedChannel.getChannelName());
         model.setActiveChannel(selectedChannel);
 
+        driver.getMessageClientManager().getMessagesByChannel(model.getActiveChannel().getChannelID());
+/*
         client.sendRequestAsync(new NetworkPackage(PackageType.GET_MESSAGES_BY_CHANNEL, selectedChannel.getChannelID()), (e) ->{
             System.out.println(e.getData());
             if(e.getType() == PackageType.GET_MESSAGES_BY_CHANNEL){
