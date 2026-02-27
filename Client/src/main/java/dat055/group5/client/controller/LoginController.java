@@ -64,6 +64,8 @@ public class LoginController {
             ChatController chatController = loader.getController();
 
             chatController.setClient(driver.getClient());
+            chatController.setDriver(driver);
+            chatController.setModel(driver.getModel());
 
             stage.setScene(chatScene);
             stage.centerOnScreen();

@@ -6,17 +6,17 @@ import dat055.group5.export.*;
 
 import java.util.List;
 
+/**
+ * Helt oanvänd klass, vänligen ignorera.
+ */
 public class ChannelClientManager implements ChannelManager <Channel>{
+    //denna klass är broken :)
     List<Channel> channels;
     User user;
     Model model;
     Driver driver;
     public ChannelClientManager(Driver driver) {
         this.driver = driver;
-    }
-
-    public void login (String userName, String password) {
-        this.user = new User(userName, password);
     }
 
     @Override
@@ -31,20 +31,24 @@ public class ChannelClientManager implements ChannelManager <Channel>{
 
     @Override
     public void removeUserFromChannel(String username, int channelID) {
+        //TODO
     }
 
     @Override
     public List<Channel> getAllChannelsForUser(String username) {
+        //TODO
         return List.of();
     }
 
     @Override
     public List<String> getAllUsersInChannel(int channelID) {
+        //TODO
         return List.of();
     }
 
     @Override
     public void getChannel(Channel channel) {
+        //TODO: this method makes no sense.
         model.setActiveChannel(channel);
     }
 }

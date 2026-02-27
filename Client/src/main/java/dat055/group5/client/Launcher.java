@@ -6,7 +6,7 @@ public class Launcher {
         Driver driver = new Driver();
         HelloApplication.setDriver(driver);
         Application.launch(HelloApplication.class, args);
-        driver.tests();
+        //driver.tests();
         // address and port are examples
         /*System.out.println("main runs");
         Message message = new Message("user1", "wdawd", 1);

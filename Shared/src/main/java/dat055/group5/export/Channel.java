@@ -19,4 +19,9 @@ public class Channel implements Serializable {
     public String getChannelName() {
         return channelName;
     }
+
+    @Override
+    public String toString() {
+        return channelName;
+    }
 }

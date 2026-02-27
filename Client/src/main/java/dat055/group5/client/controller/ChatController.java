@@ -6,6 +6,7 @@ import dat055.group5.client.view.components.ChannelListCell;
 import dat055.group5.client.view.components.ChatListCell;
 import dat055.group5.export.*;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -43,13 +44,24 @@ public class ChatController {
         chatList.setItems(model.getMessages());
         userList.setItems(model.getUsersInActiveChannel());
         currentChannelLabel.textProperty().bind(model.getActiveChannelProperty().asString());
+        ObservableList<Message> messages = model.getMessages();
 
+        messages.addListener((ListChangeListener<Message>) change -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    Platform.runLater(() -> {
+                        chatList.scrollTo(chatList.getItems().size() - 1);
+                    });
+                    break;
+                }
+            }
+        });
     }
 
     public void setClient(Client client){
 
         this.client = client;
-        
+        /*
         client.setMessageListener(message -> {
             Platform.runLater(() -> {
                 if (model.getActiveChannel() != null &&
@@ -58,6 +70,8 @@ public class ChatController {
                 }
             });
         });
+
+         */
         client.sendRequestAsync(new NetworkPackage(PackageType.GET_CHANNELS_FOR_USER, client.getUsername()), (e) ->{
             System.out.println(e.getData());
             if(e.getType() == PackageType.GET_CHANNELS_FOR_USER){
@@ -80,6 +94,7 @@ public class ChatController {
 
     @FXML
     public void initialize() {
+
         chatList.setCellFactory(_ -> new ChatListCell());
         channelList.setCellFactory(_ -> new ChannelListCell());
 
@@ -89,25 +104,20 @@ public class ChatController {
             }
         });
 
+
+
+
         chatList.getItems().addListener((ListChangeListener<Message>) change -> {
-            while (change.next()) {
-                if (change.wasAdded()) {
-                    Platform.runLater(() -> {
-                        Platform.runLater(() -> {
-                            chatList.scrollTo(chatList.getItems().size() - 1);
-                        });
-                    });
-                    break;
-                }
-            }
+
         });
+
 
     }
 
     private void onChannelSelected(Channel selectedChannel) {
         System.out.println("User pressed channel: " + selectedChannel.getChannelName());
 
-        currentChannelLabel.setText(selectedChannel.getChannelName());
+        //currentChannelLabel.setText(selectedChannel.getChannelName());
         model.setActiveChannel(selectedChannel);
 
         client.sendRequestAsync(new NetworkPackage(PackageType.GET_MESSAGES_BY_CHANNEL, selectedChannel.getChannelID()), (e) ->{
@@ -127,6 +137,8 @@ public class ChatController {
                 }
             }
         });
+        */
+        //TODO MAKE THIS DO RIGHT THING TOO
         client.sendRequestAsync(new NetworkPackage(PackageType.GET_USER_IN_CHANNEL, selectedChannel.getChannelID()), (e) ->{
             System.out.println(e.getData());
             if(e.getType() == PackageType.GET_USER_IN_CHANNEL){

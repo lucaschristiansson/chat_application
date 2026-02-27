@@ -109,7 +109,11 @@ public class Server extends Thread{
             while (!clientSocket.isClosed() && clientSocket.isConnected()) {
                 try {
                     Object obj = in.readObject();
+
                     if (obj instanceof NetworkPackage networkPackage) {
+                        if(!verified && !networkPackage.getType().equals(PackageType.LOGIN)) {
+                            continue;
+                        }
                         switch (networkPackage.getType()) {
                             case CREATE_CHANNEL: {
                                 Channel channel = (Channel) networkPackage.getData();
@@ -129,19 +133,19 @@ public class Server extends Thread{
                                 break;
                             }
                             case ADD_USER_TO_CHANNEL: {
-                                try{
+                                try {
                                     AddUserWithChannel userData = (AddUserWithChannel) networkPackage.getData();
-                                    for(String username : userData.getUsernames()){
+                                    for (String username : userData.getUsernames()) {
                                         channelDatabaseManager.addUserToChannel(username, userData.getChannelID());
                                     }
-                                } catch(Exception e){
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
                                 break;
                             }
                             case REMOVE_USER_FROM_CHANNEL: {
                                 AddUserWithChannel userData = (AddUserWithChannel) networkPackage.getData();
-                                for(String username : userData.getUsernames()){
+                                for (String username : userData.getUsernames()) {
                                     channelDatabaseManager.removeUserFromChannel(username, userData.getChannelID());
                                 }
                                 break;
@@ -181,9 +185,9 @@ public class Server extends Thread{
                             case LOGIN: {
                                 User user = (User) networkPackage.getData();
 
-                                NetworkPackage response = new NetworkPackage(networkPackage.getID(),PackageType.VERIFY, false);
+                                NetworkPackage response = new NetworkPackage(networkPackage.getID(), PackageType.VERIFY, false);
 
-                                if(userDatabaseManager.authenticateUser(user)){
+                                if (userDatabaseManager.authenticateUser(user)) {
                                     username = user.getUsername();
                                     verified = true;
                                     response.setData(true);
@@ -193,6 +197,7 @@ public class Server extends Thread{
                                 }
                                 sendPackage(response);
                             }
+
                         }
                     }
                 } catch (IOException | ClassNotFoundException e) {

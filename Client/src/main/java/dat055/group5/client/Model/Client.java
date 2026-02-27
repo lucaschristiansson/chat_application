@@ -5,6 +5,7 @@ import dat055.group5.export.*;
 
 import java.io.*;
 import java.net.*;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -92,7 +93,7 @@ public class Client {
     }
 
     public void sendRequestAsync(NetworkPackage networkPackage, java.util.function.Consumer<NetworkPackage> onSuccess) {
-
+        System.out.println("sendreqasync: " + networkPackage.getData().toString());
         CompletableFuture<NetworkPackage> future = requestManager.registerRequest(networkPackage.getID());
         future.thenAccept(onSuccess);
 
@@ -118,6 +119,7 @@ public class Client {
                 while (true) {
                     Object obj = reader.readObject();
                     if (obj instanceof NetworkPackage networkPackage) {
+                        System.out.println(networkPackage.getType() + " and " + networkPackage.getData().toString());
                         boolean isResponse = requestManager.completeRequest(networkPackage.getID(), networkPackage);
 
                         if(!isResponse){
@@ -129,7 +131,7 @@ public class Client {
                                 }
                             }
                         }
-                        /*
+
                         switch (networkPackage.getType()) {
                             case CREATE_CHANNEL: {
                                 Channel channel = (Channel) networkPackage.getData();
@@ -141,6 +143,7 @@ public class Client {
                             }
                             case CREATE_MESSAGE: {
                                 Message message = (Message) networkPackage.getData();
+                                model.addMessage(message);
                                 break;
                             }
                             case ADD_USER_TO_CHANNEL: {
@@ -180,7 +183,7 @@ public class Client {
                                 User user = (User) networkPackage.getData();
                                 break;
                             }
-                        }*/
+                        }
                     }
                 }
             } catch (IOException | ClassNotFoundException e) {

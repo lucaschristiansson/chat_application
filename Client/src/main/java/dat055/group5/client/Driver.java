@@ -25,12 +25,13 @@ public class Driver {
 
     public Driver(){
         this.requestManager = new RequestManager();
-        this.model = new Model(new Channel(0, "channel0"), null); //TODO FETCH!!!!
+        this.model = new Model(new Channel(0, "Channel0"), null); //TODO FETCH!!!!
         this.client = new Client(this, "127.0.0.1", 4000);
         this.channelClientManager = new ChannelClientManager(this);
         this.messageClientManager = new MessageClientManager(this);
         this.userClientManager = new UserClientManager();
 
+        messageClientManager.getMessagesByChannel(model.getActiveChannel().getChannelID());
 
     }
 
@@ -78,5 +79,17 @@ public class Driver {
 
     public Model getModel() {
         return model;
+    }
+
+    public ChannelClientManager getChannelClientManager() {
+        return channelClientManager;
+    }
+
+    public MessageClientManager getMessageClientManager() {
+        return messageClientManager;
+    }
+
+    public UserClientManager getUserClientManager() {
+        return userClientManager;
     }
 }

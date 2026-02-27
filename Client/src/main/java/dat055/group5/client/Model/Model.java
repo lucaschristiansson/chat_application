@@ -3,12 +3,11 @@ package dat055.group5.client.Model;
 import dat055.group5.export.Channel;
 import dat055.group5.export.Message;
 import dat055.group5.export.User;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
-import java.util.List;
 
 public class Model {
     private final ObjectProperty<Channel> activeChannel = new SimpleObjectProperty<>();
@@ -35,7 +34,9 @@ public class Model {
     }
 
     public void addMessage(Message message) {
-        this.messages.add(message);
+        Platform.runLater(() -> {
+            this.messages.add(message);
+        });
     }
 
     public void addToChannels(Channel channel) {
