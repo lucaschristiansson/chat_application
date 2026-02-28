@@ -48,8 +48,23 @@ public class Model {
             usersInActiveChannel.add(username);
     }
 
+    public void removeUserfromActiveChannel(String username, int channelId) {
+        if (this.activeChannel.get().getChannelID() == channelId)
+            this.usersInActiveChannel.remove(username);
+    }
+
     public ObservableList<Channel> getChannels() {
         return channels;
+    }
+
+    public void setChannels(ObservableList<Channel> channels) {
+        if (channels != null) {
+            this.channels.setAll(channels);
+        }
+    }
+
+    public void setUsersInActiveChannel (ObservableList<String> usersInActiveChannel) {
+        this.usersInActiveChannel.setAll(usersInActiveChannel);
     }
 
     public ObservableList<Message> getMessages() {
@@ -59,6 +74,7 @@ public class Model {
     public ObservableList<String> getUsersInActiveChannel() {
         return usersInActiveChannel;
     }
+
 
     public User getClientUser() {
         return clientUser;

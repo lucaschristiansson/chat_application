@@ -13,25 +13,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MessageClientManager implements MessageManager {
-    private Model model;
-    private final Driver driver;
 
+    private final Driver driver;
 
     public MessageClientManager(Driver driver){
         this.driver = driver;
-        this.model = driver.getModel();
     }
 
 
     @Override
     public boolean addMessage(Message message) {
-        model.addMessage(message);
+        driver.getModel().addMessage(message);
         return true;
     }
 
     @Override
     public List<Message> getMessagesByChannel(int channelId) {
-        driver.getClient().sendRequestAsync(new NetworkPackage(PackageType.GET_MESSAGES_BY_CHANNEL, model.getActiveChannel().getChannelID()), (networkPackage) ->{
+        driver.getClient().sendRequestAsync(new NetworkPackage(PackageType.GET_MESSAGES_BY_CHANNEL, driver.getModel().getActiveChannel().getChannelID()), (networkPackage) ->{
             System.out.println(networkPackage.getData());
             System.out.println("hello!");
             if(networkPackage.getType() == PackageType.GET_MESSAGES_BY_CHANNEL){
@@ -39,7 +37,7 @@ public class MessageClientManager implements MessageManager {
                     if(networkPackage.getData() instanceof List<?> list){
                         for(Object message : list){
                             if(message instanceof Message m){
-                                model.addMessage(m);
+                                driver.getModel().addMessage(m);
                             }
                         }
                     }

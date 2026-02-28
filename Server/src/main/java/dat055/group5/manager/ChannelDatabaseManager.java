@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ChannelDatabaseManager implements ChannelManager <Channel>{
+public class ChannelDatabaseManager implements ChannelManager <Channel, String, Integer, List<Channel>, List<String>> {
     private final Driver driver;
     private final Connection connection;
 
@@ -74,7 +74,7 @@ public class ChannelDatabaseManager implements ChannelManager <Channel>{
         return channels;
     }
     @Override
-    public List<String> getAllUsersInChannel(int channelID) {
+    public List<String> getAllUsersInChannel(Integer channelID) {
         String sql = "SELECT username FROM UsersInChannel WHERE channel_id = ?";
         List<String> users = new ArrayList<>();
 
