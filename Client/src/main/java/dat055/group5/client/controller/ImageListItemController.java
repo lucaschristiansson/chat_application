@@ -2,6 +2,7 @@ package dat055.group5.client.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
@@ -17,24 +18,19 @@ public class ImageListItemController {
 
     private Image attachedImage;
 
-    @FXML
-    public void initialize() {
-        Rectangle clip = new Rectangle(100, 100);
+    private ListView<Image> parentListView;
 
-        clip.setArcWidth(24);
-        clip.setArcHeight(24);
-
-        imgView.setClip(clip);
+    public void setup(Image image, ListView<Image> parentListView) {
+        this.attachedImage = image;
+        this.parentListView = parentListView;
+        imgView.setImage(image);
     }
 
     @FXML
     public void onClose(ActionEvent actionEvent) {
-        System.out.println("Removed image: " + attachedImage);
-    }
-
-    public void updateUI(Image image) {
-        this.attachedImage = image;
-        imgView.setImage(attachedImage);
+        if (parentListView != null && attachedImage != null) {
+            parentListView.getItems().remove(attachedImage);
+        }
     }
 
     public StackPane getParent(){

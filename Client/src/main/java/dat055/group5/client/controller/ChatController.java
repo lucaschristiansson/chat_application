@@ -7,6 +7,7 @@ import dat055.group5.client.view.components.ChannelListCell;
 import dat055.group5.client.view.components.ChatListCell;
 import dat055.group5.client.view.components.ImageListCell;
 import dat055.group5.export.*;
+import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,13 +15,11 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.application.Platform;
 import javafx.stage.FileChooser;
 
 
-import javax.swing.text.Element;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.List;
@@ -119,6 +118,9 @@ public class ChatController {
         channelList.setCellFactory(_ -> new ChannelListCell());
         imageList.setCellFactory(_ -> new ImageListCell());
 
+        imageList.visibleProperty().bind(Bindings.isNotEmpty(imageList.getItems()));
+        imageList.managedProperty().bind(imageList.visibleProperty());
+
         channelList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 onChannelSelected(newValue);
@@ -200,24 +202,14 @@ public class ChatController {
 
     @FXML
     public void onAttach(ActionEvent event) throws MalformedURLException {
-
         FileChooser fileChooser = new FileChooser();
-
         File file = fileChooser.showOpenDialog(((Node) event.getTarget()).getScene().getWindow());
 
         System.out.println(file);
 
-        if(file != null){
-            Image image = new Image(file.toURI().toURL().toExternalForm());
-            System.out.println(image);
-            imageList.getItems().addLast(image);
-        }
+        Image image = new Image(file.toURI().toURL().toExternalForm());
 
-        /*Platform.runLater(() -> {
-            client.sendMessagePackage(messageContentField.getText());
-            messageContentField.clear();
-        });*/
-
+        imageList.getItems().add(image);
     }
 
     @FXML
