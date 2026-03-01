@@ -5,16 +5,24 @@ import dat055.group5.client.Model.Model;
 import dat055.group5.client.Driver;
 import dat055.group5.client.view.components.ChannelListCell;
 import dat055.group5.client.view.components.ChatListCell;
+import dat055.group5.client.view.components.ImageListCell;
 import dat055.group5.export.*;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.application.Platform;
+import javafx.stage.FileChooser;
 
 
+import javax.swing.text.Element;
+import java.io.File;
+import java.net.MalformedURLException;
 import java.util.List;
 
 
@@ -26,6 +34,8 @@ public class ChatController {
     @FXML public ListView<Channel> channelList;
     @FXML private ListView<Message> chatList;
     @FXML private ListView<String> userList;
+    @FXML private ListView<Image> imageList;
+
     @FXML
     private SplitPane mainSplitPane;
 
@@ -107,15 +117,13 @@ public class ChatController {
 
         chatList.setCellFactory(_ -> new ChatListCell());
         channelList.setCellFactory(_ -> new ChannelListCell());
+        imageList.setCellFactory(_ -> new ImageListCell());
 
         channelList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 onChannelSelected(newValue);
             }
         });
-
-
-
 
         chatList.getItems().addListener((ListChangeListener<Message>) change -> {
 
@@ -188,6 +196,28 @@ public class ChatController {
             mainSplitPane.getItems().addLast(usersVBox);
             mainSplitPane.setDividerPosition(mainSplitPane.getDividers().size() - 1, 0.8);
         }
+    }
+
+    @FXML
+    public void onAttach(ActionEvent event) throws MalformedURLException {
+
+        FileChooser fileChooser = new FileChooser();
+
+        File file = fileChooser.showOpenDialog(((Node) event.getTarget()).getScene().getWindow());
+
+        System.out.println(file);
+
+        if(file != null){
+            Image image = new Image(file.toURI().toURL().toExternalForm());
+            System.out.println(image);
+            imageList.getItems().addLast(image);
+        }
+
+        /*Platform.runLater(() -> {
+            client.sendMessagePackage(messageContentField.getText());
+            messageContentField.clear();
+        });*/
+
     }
 
     @FXML

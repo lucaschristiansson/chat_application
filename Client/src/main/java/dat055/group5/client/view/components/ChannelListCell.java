@@ -24,9 +24,7 @@ public class ChannelListCell extends ListCell<Channel> {
             setText(null);
             setGraphic(null);
         } else {
-            // Only load the FXML once per cell to save memory and CPU
             if (loader == null) {
-                // Make sure to create this FXML file in your resources folder!
                 loader = new FXMLLoader(getClass().getResource("/dat055/group5/client/components/channel-list-item.fxml"));
                 try {
                     loader.load();

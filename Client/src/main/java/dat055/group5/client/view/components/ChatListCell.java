@@ -19,7 +19,6 @@ public class ChatListCell extends ListCell<Message> {
         //initialize view stuff
     }
 
-
     @Override
     protected void updateItem(Message message, boolean empty){
         super.updateItem(message, empty);
