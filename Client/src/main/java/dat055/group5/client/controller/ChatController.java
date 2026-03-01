@@ -76,17 +76,6 @@ public class ChatController {
     public void setClient(Client client){
 
         this.client = client;
-        /*
-        client.setMessageListener(message -> {
-            Platform.runLater(() -> {
-                if (model.getActiveChannel() != null &&
-                    message.getChannel().equals(model.getActiveChannel().getChannelID())) {
-                    chatList.getItems().add(message);
-                }
-            });
-        });
-
-         */
         client.sendRequestAsync(new NetworkPackage(PackageType.GET_CHANNELS_FOR_USER, client.getUsername()), (e) ->{
             System.out.println(e.getData());
             if(e.getType() == PackageType.GET_CHANNELS_FOR_USER){
@@ -141,25 +130,7 @@ public class ChatController {
         model.setActiveChannel(selectedChannel);
 
         driver.getMessageClientManager().getMessagesByChannel(model.getActiveChannel().getChannelID());
-/*
-        client.sendRequestAsync(new NetworkPackage(PackageType.GET_MESSAGES_BY_CHANNEL, selectedChannel.getChannelID()), (e) ->{
-            System.out.println(e.getData());
-            if(e.getType() == PackageType.GET_MESSAGES_BY_CHANNEL){
-                try{
-                    if(e.getData() instanceof List<?> list){
-                        List<Message> messages = (List<Message>) list;
-                        Platform.runLater(() -> {
-                            for(Message message : messages){
-                                model.addMessage(message);
-                            }
-                        });
-                    }
-                } catch (Exception ex) {
-                    throw new RuntimeException(ex);
-                }
-            }
-        });
-        */
+
         //TODO MAKE THIS DO RIGHT THING TOO
         client.sendRequestAsync(new NetworkPackage(PackageType.GET_USER_IN_CHANNEL, selectedChannel.getChannelID()), (e) ->{
             System.out.println(e.getData());
@@ -214,9 +185,11 @@ public class ChatController {
 
     @FXML
     public void onSend(ActionEvent event) {
+        client.sendMessagePackage(messageContentField.getText(), imageList.getItems());
+
         Platform.runLater(() -> {
-            client.sendMessagePackage(messageContentField.getText());
             messageContentField.clear();
+            imageList.getItems().clear();
         });
 
     }

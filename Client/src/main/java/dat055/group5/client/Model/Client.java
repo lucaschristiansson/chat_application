@@ -2,12 +2,18 @@ package dat055.group5.client.Model;
 import dat055.group5.client.Driver;
 import dat055.group5.client.RequestManager;
 import dat055.group5.export.*;
+import javafx.scene.image.Image;
 
 import java.io.*;
 import java.net.*;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
+
+import javafx.embed.swing.SwingFXUtils;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 
 /**
  * Ansvarar för
@@ -66,16 +72,28 @@ public class Client {
         return this.model.getActiveChannel();
     }
 
-    public void sendMessagePackage(String content){
+    public void sendMessagePackage(String content, List<Image> images){
+        List<byte[]> imageBytesList = new ArrayList<>();
+
+        /* Used an AI agent here to understand how to convert JavaFX Image to buffer so that you can write it over the raw sockets*/
+        if (images != null && !images.isEmpty()) {
+            for (Image fxImage : images) {
+                try {
+                    BufferedImage bImage = SwingFXUtils.fromFXImage(fxImage, null);
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    ImageIO.write(bImage, "png", stream);
+                    imageBytesList.add(stream.toByteArray());
+                } catch (IOException e) {
+                    System.err.println("Failed to convert image: " + e.getMessage());
+                }
+            }
+        }
+
+        Message outgoingMessage = new Message(getUsername(), content, getActiveChannel().getChannelID(), imageBytesList);
+
         sendRequestAsync(
-                driver.getMessageClientPacker().addMessage(
-                        new Message(getUsername(), content, getActiveChannel().getChannelID())
-                ),
+                driver.getMessageClientPacker().addMessage(outgoingMessage),
                 (networkPackage) -> {
-                    System.out.println(networkPackage.getData());
-                    if(networkPackage.getType() == PackageType.CREATE_MESSAGE){
-                        model.addMessage((Message) networkPackage.getData());
-                    }
                 }
         );
     }
@@ -102,10 +120,8 @@ public class Client {
     }
 
     public void sendRequestAsync(NetworkPackage networkPackage, java.util.function.Consumer<NetworkPackage> onSuccess) {
-        System.out.println("sendreqasync: " + networkPackage.getData().toString());
         CompletableFuture<NetworkPackage> future = requestManager.registerRequest(networkPackage.getID());
         future.thenAccept(onSuccess);
-
         try {
             sendNetworkPackage(networkPackage);
 
@@ -128,7 +144,6 @@ public class Client {
                 while (true) {
                     Object obj = reader.readObject();
                     if (obj instanceof NetworkPackage networkPackage) {
-                        System.out.println(networkPackage.getType() + " and " + networkPackage.getData().toString());
                         boolean isResponse = requestManager.completeRequest(networkPackage.getID(), networkPackage);
 
                         if(!isResponse){
@@ -136,6 +151,7 @@ public class Client {
                                 case PackageType.CREATE_MESSAGE -> {
                                     if (Client.this.messageListener != null && networkPackage.getData() instanceof Message) {
                                         Client.this.messageListener.accept((Message) networkPackage.getData());
+
                                     }
                                 }
                             }
@@ -204,7 +220,6 @@ public class Client {
 }
 
 /**
- * add images support
  * add more javadocs
  * add channels
  *

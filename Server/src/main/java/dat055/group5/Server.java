@@ -10,7 +10,6 @@ import java.util.*;
 
 public class Server extends Thread{
 
-    // https://www.geeksforgeeks.org/java/collections-synchronizedset-method-in-java-with-examples/
     private final Set<ClientHandler> clients = Collections.synchronizedSet(new HashSet<>());
     private ServerSocket serverSocket = null;
     private final Driver driver;
@@ -92,7 +91,6 @@ public class Server extends Thread{
             try {
                 this.in = new ObjectInputStream(socket.getInputStream());
                 this.out = new ObjectOutputStream(socket.getOutputStream());
-
 
                 this.userDatabaseManager = driver.getUserDatabaseManager();
                 this.channelDatabaseManager = driver.getChannelDatabaseManager();

@@ -2,36 +2,55 @@ package dat055.group5.export;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Message implements Serializable {
-    Instant timestamp;
-    String sender;
-    Integer channel;
-    String content;
-    String imagePath;
+    // Crucial for socket communication stability
+    private static final long serialVersionUID = 1L;
 
+    private Instant timestamp;
+    private String sender;
+    private Integer channel;
+    private String content;
+
+    // We send raw bytes over the network, NOT JavaFX UI components
+    private List<byte[]> imageBytes;
+
+    // Constructor 1: New text message
     public Message(String sender, String content, Integer channel) {
         this.sender = sender;
         this.content = content;
         this.timestamp = Instant.now();
         this.channel = channel;
-        this.imagePath = null;
+        this.imageBytes = new ArrayList<>();
     }
 
+    // Constructor 2: Reconstructed text message (e.g., from database)
     public Message(String sender, String content, Instant timestamp, Integer channel) {
         this.sender = sender;
         this.content = content;
         this.timestamp = timestamp;
         this.channel = channel;
-        this.imagePath = null;
+        this.imageBytes = new ArrayList<>();
     }
 
-    public Message(String sender, String content, Instant timestamp, Integer channel, String imagePath) {
+    // Constructor 3: Reconstructed message with images
+    public Message(String sender, String content, Instant timestamp, Integer channel, List<byte[]> imageBytes) {
         this.sender = sender;
         this.content = content;
         this.timestamp = timestamp;
         this.channel = channel;
-        this.imagePath = imagePath;
+        this.imageBytes = (imageBytes != null) ? imageBytes : new ArrayList<>();
+    }
+
+    // Constructor 4: New message with images
+    public Message(String sender, String content, Integer channel, List<byte[]> imageBytes) {
+        this.sender = sender;
+        this.content = content;
+        this.timestamp = Instant.now(); // Fixed bug here!
+        this.channel = channel;
+        this.imageBytes = (imageBytes != null) ? imageBytes : new ArrayList<>();
     }
 
     public Instant getTimestamp() {
@@ -50,8 +69,11 @@ public class Message implements Serializable {
         return channel;
     }
 
-    public String getImagePath() {
-        return imagePath;
+    public List<byte[]> getImageBytes() {
+        return imageBytes;
     }
 
+    public void addImageBytes(byte[] bytes) {
+        this.imageBytes.add(bytes);
+    }
 }
