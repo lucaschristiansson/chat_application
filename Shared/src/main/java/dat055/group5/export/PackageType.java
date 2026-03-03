@@ -1,5 +1,10 @@
 package dat055.group5.export;
 
+/**
+ * Defines all types of packages
+ * that can be sent
+ * Each type represents a request or operation
+ */
 public enum PackageType {
     CREATE_CHANNEL,
     CREATE_USER,

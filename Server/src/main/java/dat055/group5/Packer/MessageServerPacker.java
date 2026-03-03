@@ -9,6 +9,9 @@ import dat055.group5.export.PackageType;
 
 import java.util.List;
 
+/**
+ * Converts Message information from database into {@link NetworkPackage} of specified type
+ */
 public class MessageServerPacker implements MessagePacker<List<Message>> {
     @Override
     public NetworkPackage addMessage(Message message) {

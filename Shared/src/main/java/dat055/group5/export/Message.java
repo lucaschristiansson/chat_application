@@ -5,8 +5,15 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a message
+ * Is serializable and can be sent in streams over network
+ */
 public class Message implements Serializable {
-    // Crucial for socket communication stability
+    /**
+     * Unique identifier
+     * Crucial for socket communication stability
+     */
     private static final long serialVersionUID = 1L;
 
     private Instant timestamp;
@@ -17,7 +24,12 @@ public class Message implements Serializable {
     // We send raw bytes over the network, NOT JavaFX UI components
     private List<byte[]> imageBytes;
 
-    // Constructor 1: New text message
+    /**
+     * Creates a Message
+     * @param sender username of sender
+     * @param content text content of message
+     * @param channel channel ID of which the message was sent to
+     */
     public Message(String sender, String content, Integer channel) {
         this.sender = sender;
         this.content = content;
@@ -25,8 +37,13 @@ public class Message implements Serializable {
         this.channel = channel;
         this.imageBytes = new ArrayList<>();
     }
-
-    // Constructor 2: Reconstructed text message (e.g., from database)
+    /**
+     * Reconstructed text message (e.g., from database)
+     * @param sender username of sender
+     * @param content text content of message
+     * @param timestamp time of message creation
+     * @param channel channel ID of which the message was sent to
+     */
     public Message(String sender, String content, Instant timestamp, Integer channel) {
         this.sender = sender;
         this.content = content;
@@ -35,7 +52,14 @@ public class Message implements Serializable {
         this.imageBytes = new ArrayList<>();
     }
 
-    // Constructor 3: Reconstructed message with images
+    /**
+     * Reconstructed text message with images
+     * @param sender username of sender
+     * @param content text content of message
+     * @param timestamp time of message creation
+     * @param channel channel ID of which the message was sent to
+     * @param imageBytes list of pictures represented as byte-arrays
+     */
     public Message(String sender, String content, Instant timestamp, Integer channel, List<byte[]> imageBytes) {
         this.sender = sender;
         this.content = content;
@@ -44,7 +68,13 @@ public class Message implements Serializable {
         this.imageBytes = (imageBytes != null) ? imageBytes : new ArrayList<>();
     }
 
-    // Constructor 4: New message with images
+    /**
+     * New message with image
+     * @param sender username of sender
+     * @param content text content of message
+     * @param channel channel ID of which the message was sent to
+     * @param imageBytes list of pictures represented as byte-arrays
+     */
     public Message(String sender, String content, Integer channel, List<byte[]> imageBytes) {
         this.sender = sender;
         this.content = content;

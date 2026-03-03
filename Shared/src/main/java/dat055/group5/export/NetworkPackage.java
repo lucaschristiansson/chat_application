@@ -3,18 +3,32 @@ package dat055.group5.export;
 import java.io.Serializable;
 import java.util.UUID;
 
+/**
+ * Generic envelope for all data sent over the network
+ * Unique identifier in order to track calls/answers
+ */
 public class NetworkPackage implements Serializable {
 
     PackageType type;
     UUID id;
     Object data;
 
-
+    /**
+     * Creates a package
+     * @param type type of package
+     * @param data object sent within package
+     */
     public NetworkPackage (PackageType type, Object data) {
         this.id = UUID.randomUUID();
         this.type = type;
         this.data = data;
     }
+    /**
+     * Creates a package
+     * @param type type of package
+     * @param data object sent within package
+     * @param id unique identifier for tracking
+     */
     public NetworkPackage (UUID id,PackageType type, Object data) {
         this.id = id;
         this.type = type;

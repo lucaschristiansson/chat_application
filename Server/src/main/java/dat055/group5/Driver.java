@@ -7,6 +7,11 @@ import dat055.group5.manager.*;
 
 import java.sql.SQLException;
 
+/**
+ * Main orchestrator for server-side.
+ * Instantiates all critical components for the server.
+ * One instance of this class gives access to system-functionality.
+ */
 public class Driver {
     private final PortalConnection portalConnection;
     private final ChannelDatabaseManager channelDatabaseManager;
@@ -16,6 +21,12 @@ public class Driver {
     private final ChannelServerPacker channelServerPacker;
     private final UserServerPacker userServerPacker;
 
+    /**
+     * Starts server-environment.
+     * Starts server on selected port, establishes connection to database
+     * Instantiates all managers for database-connectivity
+     * Instantiates all packers for converting data from database
+     */
     public Driver() {
         try {
             Server server = new Server(4000, this);

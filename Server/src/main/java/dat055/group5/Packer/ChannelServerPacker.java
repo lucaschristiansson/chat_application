@@ -4,6 +4,9 @@ import dat055.group5.export.*;
 
 import java.util.List;
 
+/**
+ * Converts Channel information from database into {@link NetworkPackage} of specified type
+ */
 public class ChannelServerPacker implements ChannelPacker <List<Channel>, List<User>, Channel> {
     @Override
     public NetworkPackage addChannel(Channel channel) {
