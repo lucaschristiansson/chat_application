@@ -141,10 +141,7 @@ public class Client {
                         if(!isResponse){
                             switch (networkPackage.getType()){
                                 case PackageType.CREATE_MESSAGE -> {
-                                    if (Client.this.messageListener != null && networkPackage.getData() instanceof Message) {
-                                        Client.this.messageListener.accept((Message) networkPackage.getData());
-
-                                    }
+                                    driver.getModel().addMessage((Message) networkPackage.getData());
                                 }
                             }
                         }
