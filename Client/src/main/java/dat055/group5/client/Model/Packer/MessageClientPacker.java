@@ -13,8 +13,6 @@ public class MessageClientPacker implements MessagePacker <Integer> {
         return new NetworkPackage(PackageType.GET_MESSAGES_BY_CHANNEL, channel);
     }
 
-    //DELETE MESSAGE?
-
     @Override
     public void printMessages() {
 

@@ -6,9 +6,6 @@ import javafx.collections.ObservableList;
 
 import java.util.List;
 
-/**
- * Helt oanvänd klass, vänligen ignorera.
- */
 public class ChannelClientManager implements ChannelManager <Channel, List<Channel>, List<String>, Void, Void> {
     Driver driver;
     public ChannelClientManager(Driver driver) {
