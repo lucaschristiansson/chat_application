@@ -49,16 +49,20 @@ public class LoginController {
                 errorLabel.setText("Wrong username or password");
                 return;
             }
-
+            //welcome to the new syntax :)
             driver.getModel().setClientUser(user);
-            //System.out.println(driver.getModel().getClientUser().getUsername());
-            driver.getClient().sendRequestAsync(driver.getChannelClientPacker().getAllChannelsForUser(driver.getModel().getClientUser().getUsername()), networkPackage -> {
-                driver.getChannelClientManager().getAllChannelsForUser((List<Channel>) networkPackage.getData());
-                driver.getModel().setActiveChannel(driver.getModel().getChannels().getFirst());
-                System.out.println("hello, active channel is: " + driver.getModel().getActiveChannel());
-                driver.getClient().sendRequestAsync(driver.getMessageClientPacker().getMessagesByChannel(driver.getModel().getActiveChannel().getChannelID()), (networkPackage2) -> {
-                    driver.getMessageClientManager().getMessagesByChannel((List<Message>) networkPackage2.getData());
-                });
+            driver.getClient().sendRequestAsync(
+                    driver.getChannelClientPacker().getAllChannelsForUser(
+                            driver.getModel().getClientUser().getUsername()),
+                            networkPackage -> {
+                        driver.getChannelClientManager().getAllChannelsForUser((List<Channel>) networkPackage.getData());
+                        driver.getModel().setActiveChannel(driver.getModel().getChannels().getFirst());
+
+                        driver.getClient().sendRequestAsync(
+                                driver.getMessageClientPacker().getMessagesByChannel(
+                                        driver.getModel().getActiveChannel().getChannelID()), (networkPackage2) ->
+                            driver.getMessageClientManager().getMessagesByChannel((List<Message>) networkPackage2.getData())
+                        );
             });
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/dat055/group5/client/views/chat-view.fxml"));

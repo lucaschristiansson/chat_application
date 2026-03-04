@@ -2,6 +2,7 @@ package dat055.group5.client.Model.manager;
 
 import dat055.group5.client.Driver;
 import dat055.group5.export.*;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.List;
@@ -29,13 +30,13 @@ public class ChannelClientManager implements ChannelManager <Channel, List<Chann
 
     @Override
     public Void getAllChannelsForUser(List<Channel> channels) {
-        driver.getModel().setChannels((ObservableList<Channel>) channels);
+        driver.getModel().setChannels(FXCollections.observableArrayList(channels));
         return null;
     }
 
     @Override
     public Void getAllUsersInChannel(List<String> users) {
-        driver.getModel().setUsersInActiveChannel((ObservableList<String>) users);
+        driver.getModel().setUsersInActiveChannel(FXCollections.observableArrayList(users));
         return null;
     }
 
