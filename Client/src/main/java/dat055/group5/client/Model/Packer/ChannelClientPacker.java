@@ -4,7 +4,9 @@ import dat055.group5.export.Channel;
 import dat055.group5.export.ChannelPacker;
 import dat055.group5.export.NetworkPackage;
 import dat055.group5.export.PackageType;
-
+/**
+ * Packs client request to {@link NetworkPackage} to send over network.
+ */
 public class ChannelClientPacker implements ChannelPacker <String, String, String> {
 
     @Override

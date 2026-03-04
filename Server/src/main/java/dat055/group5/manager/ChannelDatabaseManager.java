@@ -10,8 +10,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Communicates with SQL database
+ */
 public class ChannelDatabaseManager implements ChannelManager <Channel, String, Integer, List<Channel>, List<String>> {
+
     private final Driver driver;
     private final Connection connection;
 
@@ -19,6 +22,11 @@ public class ChannelDatabaseManager implements ChannelManager <Channel, String, 
         this.driver = driver;
         this.connection = driver.getPortalConnection().getConnection();
     }
+
+    /**
+     * Adds a channel to the SQL database.
+     * @param channel
+     */
     @Override
     public void addChannel(Channel channel) {
         String sql = "INSERT INTO Channels (channel_id, channel_name) VALUES (?, ?)";
@@ -31,6 +39,12 @@ public class ChannelDatabaseManager implements ChannelManager <Channel, String, 
             e.printStackTrace();
         }
     }
+
+    /**
+     * Adds a user to specified channel in the SQL database.
+     * @param username
+     * @param channelID
+     */
     @Override
     public void addUserToChannel(String username, int channelID) {
         String sql = "INSERT INTO UsersInChannel (username, channel_id) VALUES (?, ?)";
@@ -43,6 +57,10 @@ public class ChannelDatabaseManager implements ChannelManager <Channel, String, 
             e.printStackTrace();
         }
     }
+
+    /**
+     * Removes user from the channel table in SQL database
+     */
     @Override
     public void removeUserFromChannel(String username, int channelID) {
         String sql = "DELETE FROM UsersInChannel WHERE username = ? AND channel_id = ?";
@@ -55,6 +73,12 @@ public class ChannelDatabaseManager implements ChannelManager <Channel, String, 
 
         }
     }
+
+    /**
+     * Retrieves all channels that includes the specified user
+     * from the SQL database.
+     * @return list of channels
+     */
     @Override
     public List<Channel> getAllChannelsForUser(String username) {
         String sql = "SELECT * FROM Channels NATURAL JOIN UsersInChannel WHERE username = ?";
@@ -73,6 +97,12 @@ public class ChannelDatabaseManager implements ChannelManager <Channel, String, 
         }
         return channels;
     }
+
+    /**
+     * Retrieves all users in specified channel
+     * from SQL database.
+     * @return list of users
+     */
     @Override
     public List<String> getAllUsersInChannel(Integer channelID) {
         String sql = "SELECT username FROM UsersInChannel WHERE channel_id = ?";

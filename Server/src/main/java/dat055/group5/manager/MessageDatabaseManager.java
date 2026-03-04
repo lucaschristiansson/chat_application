@@ -9,7 +9,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.*;
 import java.util.*;
-
+/**
+ * Communicates with SQL database
+ */
 public class MessageDatabaseManager implements MessageManager<List<Message>, Integer> {
     private final dat055.group5.Driver driver;
     private final Connection connection;
@@ -19,6 +21,15 @@ public class MessageDatabaseManager implements MessageManager<List<Message>, Int
         this.connection = driver.getPortalConnection().getConnection();
     }
 
+    /**
+     * Inserts messages and images to specified channel
+     * in the SQL database.
+     * Also saves files locally to ./image_uploads/.
+     * Maps images to their respective message.
+     * In case of failure the database transaction is rolled back.
+     * @param message
+     * @return true or false regarding the success of the transaction.
+     */
     @Override
     public boolean addMessage(Message message) {
         String insertMessageSql = "INSERT INTO Messages (username, channel_id, content) VALUES (?, ?, ?)";
@@ -103,6 +114,12 @@ public class MessageDatabaseManager implements MessageManager<List<Message>, Int
         }
     }
 
+    /**
+     * Retrieves messages and images from specified channel from the SQL database.
+     * Attempts to read found images in database from local disk.
+     * @param channelId
+     * @return list of messages, if no messages were found an empty list is returned.
+     */
     @Override
     public List<Message> getMessagesByChannel(Integer channelId) {
         String query =

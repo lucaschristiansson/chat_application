@@ -5,6 +5,9 @@ import dat055.group5.export.PackageType;
 import dat055.group5.export.User;
 import dat055.group5.export.UserPacker;
 
+/**
+ * Packs client request to {@link NetworkPackage} to send over network.
+ */
 public class UserClientPacker implements UserPacker <String> {
 
     @Override

@@ -20,13 +20,22 @@ public class MessageClientManager implements MessageManager<Void, List<Message>>
         this.driver = driver;
     }
 
-
+    /**
+     * Adds message to the local UI
+     * @param message
+     * @return true
+     */
     @Override
     public boolean addMessage(Message message) {
         driver.getModel().addMessage(message);
         return true;
     }
 
+    /**
+     * Asynchronus request for all messages in specified channel
+     * @param channelId
+     * @return
+     */
     @Override
     public Void getMessagesByChannel(List<Message> messages) {
         for(Message message : messages){

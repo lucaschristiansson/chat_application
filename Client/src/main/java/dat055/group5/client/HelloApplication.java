@@ -9,6 +9,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * Sets up the JavaFX login view
+ */
 public class HelloApplication extends Application {
 
     private static Driver driver;
@@ -17,6 +20,11 @@ public class HelloApplication extends Application {
         driver = newDriver;
     }
 
+    /**
+     * Loads the login-view and instantiates the belonging controller
+     * @param stage
+     * @throws IOException
+     */
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("views/login-view.fxml"));

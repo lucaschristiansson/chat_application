@@ -15,6 +15,9 @@ import dat055.group5.export.UserManager;
 
 import static dat055.group5.PortalConnection.getError;
 
+/**
+ * Communicates with the SQL database
+ */
 public class UserDatabaseManager implements UserManager {
     private final Driver driver;
     private final Connection connection;
@@ -39,6 +42,11 @@ public class UserDatabaseManager implements UserManager {
         }
     }
 
+    /**
+     * Checks the SQL database for matching login credentials
+     * @param user
+     * @return whether authentication succeeded or not.
+     */
     @Override
     public boolean authenticateUser(User user){
         String sql = "SELECT 1 FROM Users WHERE username =? AND password =?";

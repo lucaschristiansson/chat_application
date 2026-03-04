@@ -9,6 +9,9 @@ import javafx.scene.control.ListCell;
 
 import java.io.IOException;
 
+/**
+ * JavaFX code for list of users
+ */
 public class UserListCell extends ListCell<String> {
 
     private FXMLLoader loader;
@@ -17,7 +20,12 @@ public class UserListCell extends ListCell<String> {
     public UserListCell() {
         // initialization if needed
     }
-
+    /**
+     * Checks if there are users to display.
+     * Clears text and graphics if there is nothing to display and gets the necessary FXML resources.
+     * @param username
+     * @param empty
+     */
     @Override
     protected void updateItem(String username, boolean empty) {
         super.updateItem(username, empty);

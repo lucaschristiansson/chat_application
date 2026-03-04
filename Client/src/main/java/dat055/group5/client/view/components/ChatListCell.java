@@ -8,6 +8,9 @@ import javafx.scene.control.ListCell;
 
 import java.io.IOException;
 
+/**
+ * JavaFX code for the chat window.
+ */
 public class ChatListCell extends ListCell<Message> {
 
     private FXMLLoader loader;
@@ -18,7 +21,12 @@ public class ChatListCell extends ListCell<Message> {
     public ChatListCell() {
         //initialize view stuff
     }
-
+    /**
+     * Checks if there are messages to display and gets the necessary FXML resources.
+     * Clears text and graphics if there is nothing to display.
+     * @param message
+     * @param empty
+     */
     @Override
     protected void updateItem(Message message, boolean empty){
         super.updateItem(message, empty);

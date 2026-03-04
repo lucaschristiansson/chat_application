@@ -11,6 +11,10 @@ import dat055.group5.client.Model.manager.UserClientManager;
 
 import java.util.List;
 
+/**
+ * Main orchestrator for client.
+ * Initializes and maintains all core components.
+ */
 public class Driver {
     private final RequestManager requestManager;
     private final Client client;
@@ -22,10 +26,15 @@ public class Driver {
     private final UserClientManager userClientManager;
     private final Model model;
 
+    /**
+     * Initializes core infrastructure.
+     * Sets up socket connection to server.
+     * Instantiates all managers.
+     */
     @SuppressWarnings("unchecked")
     public Driver(){
         this.requestManager = new RequestManager();
-        this.model = new Model(null, null); //TODO FETCH!!!!
+        this.model = new Model(null, null);
         this.client = new Client(this, "127.0.0.1", 4000);
         this.channelClientManager = new ChannelClientManager(this);
         this.messageClientManager = new MessageClientManager(this);

@@ -9,6 +9,13 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+/**
+ * Data model for client application.
+ * Maintains application state.
+ * Tracks active channel, list of available channels and messages within
+ * currently active channel.
+ * Utilizes observer-pattern for all methods to update UI
+ */
 public class Model {
     private final ObjectProperty<Channel> activeChannel = new SimpleObjectProperty<>();
     private final ObservableList<Channel> channels = FXCollections.observableArrayList();
@@ -25,6 +32,11 @@ public class Model {
         return activeChannel.get();
     }
 
+    /**
+     * Updates currently active channel. Changes are reflected by UI
+     * thanks to ObservableList.
+     * @param channel
+     */
     public void setActiveChannel(Channel channel) {
         this.activeChannel.set(channel);
     }
