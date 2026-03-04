@@ -9,13 +9,21 @@ import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
 
+/**
+ * JavaFX code for Images
+ */
 public class ImageListCell extends ListCell<Image> {
 
     private ImageListItemController imageListItemController;
     private FXMLLoader loader;
 
     public ImageListCell() {}
-
+    /**
+     * Checks if there are images to display and gets the necessary FXML resources.
+     * Clears text and graphics if there is nothing to display.
+     * @param image
+     * @param empty
+     */
     @Override
     protected void updateItem(Image image, boolean empty) {
         super.updateItem(image, empty);

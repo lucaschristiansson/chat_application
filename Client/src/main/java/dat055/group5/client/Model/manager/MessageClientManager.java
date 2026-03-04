@@ -22,13 +22,22 @@ public class MessageClientManager implements MessageManager {
         this.model = driver.getModel();
     }
 
-
+    /**
+     * Adds message to the local UI
+     * @param message
+     * @return true
+     */
     @Override
     public boolean addMessage(Message message) {
         model.addMessage(message);
         return true;
     }
 
+    /**
+     * Asynchronus request for all messages in specified channel
+     * @param channelId
+     * @return
+     */
     @Override
     public List<Message> getMessagesByChannel(int channelId) {
         driver.getClient().sendRequestAsync(new NetworkPackage(PackageType.GET_MESSAGES_BY_CHANNEL, model.getActiveChannel().getChannelID()), (networkPackage) ->{

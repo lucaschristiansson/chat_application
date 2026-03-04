@@ -12,6 +12,10 @@ import dat055.group5.export.Channel;
 import dat055.group5.export.Message;
 import dat055.group5.export.User;
 
+/**
+ * Main orchestrator for client.
+ * Initializes and maintains all core components.
+ */
 public class Driver {
     private final RequestManager requestManager;
     private final Client client;
@@ -23,6 +27,11 @@ public class Driver {
     private final UserClientManager userClientManager;
     private final Model model;
 
+    /**
+     * Initializes core infrastructure.
+     * Sets up socket connection to server.
+     * Instantiates all managers.
+     */
     public Driver(){
         this.requestManager = new RequestManager();
         this.model = new Model(new Channel(0, "Channel0"), null); //TODO FETCH!!!!

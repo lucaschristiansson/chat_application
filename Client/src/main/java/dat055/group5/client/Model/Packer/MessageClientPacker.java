@@ -1,7 +1,9 @@
 package dat055.group5.client.Model.Packer;
 
 import dat055.group5.export.*;
-
+/**
+ * Packs client request to {@link NetworkPackage} to send over network.
+ */
 public class MessageClientPacker implements MessagePacker <Integer> {
     @Override
     public NetworkPackage addMessage(Message message) {

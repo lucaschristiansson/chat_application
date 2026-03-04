@@ -7,6 +7,9 @@ import javafx.scene.control.ListCell;
 
 import java.io.IOException;
 
+/**
+ * JavaFX code for the list of channels
+ */
 public class ChannelListCell extends ListCell<Channel> {
 
     private FXMLLoader loader;
@@ -16,6 +19,12 @@ public class ChannelListCell extends ListCell<Channel> {
         // initialization if needed
     }
 
+    /**
+     * Checks if there are channels to display and gets the necessary FXML resources.
+     * Clears text and graphics if there is nothing to display.
+     * @param channel
+     * @param empty
+     */
     @Override
     protected void updateItem(Channel channel, boolean empty) {
         super.updateItem(channel, empty);

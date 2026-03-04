@@ -15,6 +15,9 @@ import dat055.group5.export.UserManager;
 
 import static dat055.group5.PortalConnection.getError;
 
+/**
+ * Communicates with the SQL database
+ */
 public class UserDatabaseManager implements UserManager {
     private final Driver driver;
     private final Connection connection;
@@ -25,6 +28,10 @@ public class UserDatabaseManager implements UserManager {
         this.connection = driver.getPortalConnection().getConnection();
     }
 
+    /**
+     * Retrieves usernames from the SQL database
+     * @return usernames
+     */
     @Override
     public List<String> getUsers(){
         String sql = "SELECT username FROM Users";
@@ -44,6 +51,11 @@ public class UserDatabaseManager implements UserManager {
         return users;
     }
 
+    /**
+     * Adds a user to the SQL database
+     * Avoids SQL-injection by using PreparedStatement
+     * @param user
+     */
     @Override
     public void addUser(User user){
         String sql = "INSERT INTO Users(username, password) VALUES (?, ?)";
@@ -58,6 +70,11 @@ public class UserDatabaseManager implements UserManager {
         }
     }
 
+    /**
+     * Checks the SQL database for matching login credentials
+     * @param user
+     * @return whether authentication succeeded or not.
+     */
     @Override
     public boolean authenticateUser(User user){
         String sql = "SELECT 1 FROM Users WHERE username =? AND password =?";
