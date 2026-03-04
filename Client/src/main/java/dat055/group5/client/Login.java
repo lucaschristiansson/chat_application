@@ -1,6 +1,5 @@
 package dat055.group5.client;
 
-import dat055.group5.client.Model.Client;
 import dat055.group5.client.controller.LoginController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -12,7 +11,7 @@ import java.io.IOException;
 /**
  * Sets up the JavaFX login view
  */
-public class HelloApplication extends Application {
+public class Login extends Application {
 
     private static Driver driver;
 
@@ -27,7 +26,7 @@ public class HelloApplication extends Application {
      */
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("views/login-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Login.class.getResource("views/login-view.fxml"));
 
         Scene scene = new Scene(fxmlLoader.load(), 400, 400);
 

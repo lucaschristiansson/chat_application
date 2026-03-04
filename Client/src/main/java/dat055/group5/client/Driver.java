@@ -31,7 +31,6 @@ public class Driver {
      * Sets up socket connection to server.
      * Instantiates all managers.
      */
-    @SuppressWarnings("unchecked")
     public Driver(){
         this.requestManager = new RequestManager();
         this.model = new Model(null, null);
@@ -39,8 +38,6 @@ public class Driver {
         this.channelClientManager = new ChannelClientManager(this);
         this.messageClientManager = new MessageClientManager(this);
         this.userClientManager = new UserClientManager(this);
-
-
 
     }
 
