@@ -15,9 +15,6 @@ import javafx.embed.swing.SwingFXUtils;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 
-/**
- * Ansvarar för
- */
 public class Client {
     private final RequestManager requestManager;
     private final Model model;
