@@ -8,13 +8,23 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 
+/**
+ * Server for chat-application
+ * Class run on separate thread, handles client connections on ports.
+ * Instantiates {@link ClientHandler} for every new connection.
+ */
 public class Server extends Thread{
 
-    // https://www.geeksforgeeks.org/java/collections-synchronizedset-method-in-java-with-examples/
     private final Set<ClientHandler> clients = Collections.synchronizedSet(new HashSet<>());
     private ServerSocket serverSocket = null;
     private final Driver driver;
 
+    /**
+     * Initiates server and binds it to specific port.
+     * @param port TCP port that the server listens to.
+     * @param driver handles database-connections
+     * @throws IOException if server fails to start
+     */
     public Server(int port, Driver driver) throws IOException{
         serverSocket = new ServerSocket(port);
         System.out.println("Server started on port " + port);
@@ -36,6 +46,10 @@ public class Server extends Thread{
         }
     }
 
+    /**
+     * NO USAGES ??
+     * @param networkPackage
+     */
     public void broadcast(NetworkPackage networkPackage) {
         synchronized (clients) {
             for (ClientHandler client : clients) {
@@ -44,6 +58,12 @@ public class Server extends Thread{
             }
         }
     }
+
+    /**
+     * Sends package to all currently connected clients to handled channel.
+     * @param networkPackage the sent object
+     * @param channelID Identifier for the handled channel
+     */
     public void broadcastToChannel(NetworkPackage networkPackage, Integer channelID) {
 
         Collection<String> usersInChannel = driver.getChannelDatabaseManager().getAllUsersInChannel(channelID);
@@ -65,13 +85,20 @@ public class Server extends Thread{
         }
     }
 
+    /**
+     * Removes client-connection
+     * @param client
+     */
     public void removeClient(ClientHandler client) {
         clients.remove(client);
         System.out.println("Client disconnected.");
     }
 
 
-
+    /**
+     * Handles communication with clients, instantiated for each client.
+     * Handles incoming packages and validates user against database
+     */
     private static class ClientHandler extends Thread {
         private final ObjectInputStream in;
         private ObjectOutputStream out;
@@ -85,6 +112,13 @@ public class Server extends Thread{
         private final ChannelDatabaseManager channelDatabaseManager;
         private final MessageDatabaseManager messageDatabaseManager;
 
+        /**
+         * Instantiates new ClientHandler and sets up input and outputstreams.
+         * @param socket
+         * @param server
+         * @param driver
+         * @throws RuntimeException if initialization fails
+         */
         public ClientHandler(Socket socket, Server server, Driver driver) {
             this.clientSocket = socket;
             this.server = server;
@@ -92,7 +126,6 @@ public class Server extends Thread{
             try {
                 this.in = new ObjectInputStream(socket.getInputStream());
                 this.out = new ObjectOutputStream(socket.getOutputStream());
-
 
                 this.userDatabaseManager = driver.getUserDatabaseManager();
                 this.channelDatabaseManager = driver.getChannelDatabaseManager();
@@ -103,6 +136,13 @@ public class Server extends Thread{
             }
         }
 
+        /**
+         * Main loop for clienthandler, runs in a separate thread.
+         * Method listens for {@link NetworkPackage}-objects arriving from clients while connection is established
+         * and arriving object is not of type Login
+         * Checks what type of package is sent and calls the designated methods for each case.
+         * Handles connectivity-issues.
+         */
         @Override
         public void run() {
             System.out.println("ClientHandler runs");
@@ -208,6 +248,12 @@ public class Server extends Thread{
             server.removeClient(this);
         }
 
+        /**
+         * Sends {@link NetworkPackage} to connected client
+         * Method is synchronized and buffer is cleared after sending to allow new sends.
+         * @param message that is to be sent as a package
+         * @throws IOException in case of connectivity-issues.
+         */
         public void sendPackage(NetworkPackage message) {
             try {
                 synchronized (out) {

@@ -13,6 +13,7 @@
 
 <?import javafx.scene.Group?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ScrollPane?>
 <HBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dat055.group5.client.controller.ChatController">
    <children>
       <SplitPane fx:id="mainSplitPane" dividerPositions="0.2, 0.8" HBox.hgrow="ALWAYS" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="900.0">
@@ -45,7 +46,7 @@
             </VBox>
             <VBox prefWidth="500.0">
                <children>
-                  <HBox alignment="CENTER_LEFT" prefHeight="40.0" spacing="10.0" style="-fx-background-color: #f0f0f0;" VBox.vgrow="NEVER">
+                  <HBox alignment="CENTER_LEFT" minHeight="40.0" prefHeight="40.0" maxHeight="40.0" spacing="10.0" style="-fx-background-color: #f0f0f0;" VBox.vgrow="NEVER">
                      <padding>
                         <Insets left="10.0" right="10.0" />
                      </padding>
@@ -72,6 +73,7 @@
 
                   <ListView fx:id="chatList" VBox.vgrow="ALWAYS" />
 
+                  <ListView fx:id="imageList" orientation="HORIZONTAL" prefHeight="175.0" />
                   <HBox alignment="CENTER" spacing="10.0" VBox.vgrow="NEVER">
                      <padding>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -82,6 +84,11 @@
                               <Font name="JetBrains Mono Regular" size="12.0" />
                            </font>
                         </TextArea>
+                        <Button minWidth="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#onAttach" prefHeight="45.0" prefWidth="80.0" text="Attach">
+                           <font>
+                              <Font name="JetBrains Mono Regular" size="12.0" />
+                           </font>
+                        </Button>
                         <Button minWidth="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#onSend" prefHeight="45.0" prefWidth="80.0" text="SEND">
                            <font>
                               <Font name="JetBrains Mono Regular" size="14.0" />

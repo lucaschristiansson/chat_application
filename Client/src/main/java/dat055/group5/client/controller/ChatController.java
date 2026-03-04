@@ -5,16 +5,23 @@ import dat055.group5.client.Model.Model;
 import dat055.group5.client.Driver;
 import dat055.group5.client.view.components.ChannelListCell;
 import dat055.group5.client.view.components.ChatListCell;
+import dat055.group5.client.view.components.ImageListCell;
 import dat055.group5.export.*;
+import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.application.Platform;
+import javafx.stage.FileChooser;
 
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.util.List;
 
 
@@ -26,6 +33,8 @@ public class ChatController {
     @FXML public ListView<Channel> channelList;
     @FXML private ListView<Message> chatList;
     @FXML private ListView<String> userList;
+    @FXML private ListView<Image> imageList;
+
     @FXML
     private SplitPane mainSplitPane;
 
@@ -67,17 +76,6 @@ public class ChatController {
     public void setClient(Client client){
 
         this.client = client;
-        /*
-        client.setMessageListener(message -> {
-            Platform.runLater(() -> {
-                if (model.getActiveChannel() != null &&
-                    message.getChannel().equals(model.getActiveChannel().getChannelID())) {
-                    chatList.getItems().add(message);
-                }
-            });
-        });
-
-         */
         client.sendRequestAsync(new NetworkPackage(PackageType.GET_CHANNELS_FOR_USER, client.getUsername()), (e) ->{
             System.out.println(e.getData());
             if(e.getType() == PackageType.GET_CHANNELS_FOR_USER){
@@ -107,15 +105,16 @@ public class ChatController {
 
         chatList.setCellFactory(_ -> new ChatListCell());
         channelList.setCellFactory(_ -> new ChannelListCell());
+        imageList.setCellFactory(_ -> new ImageListCell());
+
+        imageList.visibleProperty().bind(Bindings.isNotEmpty(imageList.getItems()));
+        imageList.managedProperty().bind(imageList.visibleProperty());
 
         channelList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 onChannelSelected(newValue);
             }
         });
-
-
-
 
         chatList.getItems().addListener((ListChangeListener<Message>) change -> {
 
@@ -131,25 +130,7 @@ public class ChatController {
         model.setActiveChannel(selectedChannel);
 
         driver.getMessageClientManager().getMessagesByChannel(model.getActiveChannel().getChannelID());
-/*
-        client.sendRequestAsync(new NetworkPackage(PackageType.GET_MESSAGES_BY_CHANNEL, selectedChannel.getChannelID()), (e) ->{
-            System.out.println(e.getData());
-            if(e.getType() == PackageType.GET_MESSAGES_BY_CHANNEL){
-                try{
-                    if(e.getData() instanceof List<?> list){
-                        List<Message> messages = (List<Message>) list;
-                        Platform.runLater(() -> {
-                            for(Message message : messages){
-                                model.addMessage(message);
-                            }
-                        });
-                    }
-                } catch (Exception ex) {
-                    throw new RuntimeException(ex);
-                }
-            }
-        });
-        */
+
         //TODO MAKE THIS DO RIGHT THING TOO
         client.sendRequestAsync(new NetworkPackage(PackageType.GET_USER_IN_CHANNEL, selectedChannel.getChannelID()), (e) ->{
             System.out.println(e.getData());
@@ -191,10 +172,24 @@ public class ChatController {
     }
 
     @FXML
+    public void onAttach(ActionEvent event) throws MalformedURLException {
+        FileChooser fileChooser = new FileChooser();
+        File file = fileChooser.showOpenDialog(((Node) event.getTarget()).getScene().getWindow());
+
+        System.out.println(file);
+
+        Image image = new Image(file.toURI().toURL().toExternalForm());
+
+        imageList.getItems().add(image);
+    }
+
+    @FXML
     public void onSend(ActionEvent event) {
+        client.sendMessagePackage(messageContentField.getText(), imageList.getItems());
+
         Platform.runLater(() -> {
-            client.sendMessagePackage(messageContentField.getText());
             messageContentField.clear();
+            imageList.getItems().clear();
         });
 
     }

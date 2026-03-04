@@ -7,6 +7,9 @@ import dat055.group5.export.UserPacker;
 
 import java.util.List;
 
+/**
+ * Converts User information from database into {@link NetworkPackage} of specified type
+ */
 public class UserServerPacker implements UserPacker <List<User>> {
     @Override
     public NetworkPackage getUsers(List <User> users) {

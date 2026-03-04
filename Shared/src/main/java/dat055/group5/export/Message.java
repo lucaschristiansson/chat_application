@@ -2,36 +2,85 @@ package dat055.group5.export;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * Represents a message
+ * Is serializable and can be sent in streams over network
+ */
 public class Message implements Serializable {
-    Instant timestamp;
-    String sender;
-    Integer channel;
-    String content;
-    String imagePath;
+    /**
+     * Unique identifier
+     * Crucial for socket communication stability
+     */
+    private static final long serialVersionUID = 1L;
 
+    private Instant timestamp;
+    private String sender;
+    private Integer channel;
+    private String content;
+
+    // We send raw bytes over the network, NOT JavaFX UI components
+    private List<byte[]> imageBytes;
+
+    /**
+     * Creates a Message
+     * @param sender username of sender
+     * @param content text content of message
+     * @param channel channel ID of which the message was sent to
+     */
     public Message(String sender, String content, Integer channel) {
         this.sender = sender;
         this.content = content;
         this.timestamp = Instant.now();
         this.channel = channel;
-        this.imagePath = null;
+        this.imageBytes = new ArrayList<>();
     }
-
+    /**
+     * Reconstructed text message (e.g., from database)
+     * @param sender username of sender
+     * @param content text content of message
+     * @param timestamp time of message creation
+     * @param channel channel ID of which the message was sent to
+     */
     public Message(String sender, String content, Instant timestamp, Integer channel) {
         this.sender = sender;
         this.content = content;
         this.timestamp = timestamp;
         this.channel = channel;
-        this.imagePath = null;
+        this.imageBytes = new ArrayList<>();
     }
 
-    public Message(String sender, String content, Instant timestamp, Integer channel, String imagePath) {
+    /**
+     * Reconstructed text message with images
+     * @param sender username of sender
+     * @param content text content of message
+     * @param timestamp time of message creation
+     * @param channel channel ID of which the message was sent to
+     * @param imageBytes list of pictures represented as byte-arrays
+     */
+    public Message(String sender, String content, Instant timestamp, Integer channel, List<byte[]> imageBytes) {
         this.sender = sender;
         this.content = content;
         this.timestamp = timestamp;
         this.channel = channel;
-        this.imagePath = imagePath;
+        this.imageBytes = (imageBytes != null) ? imageBytes : new ArrayList<>();
+    }
+
+    /**
+     * New message with image
+     * @param sender username of sender
+     * @param content text content of message
+     * @param channel channel ID of which the message was sent to
+     * @param imageBytes list of pictures represented as byte-arrays
+     */
+    public Message(String sender, String content, Integer channel, List<byte[]> imageBytes) {
+        this.sender = sender;
+        this.content = content;
+        this.timestamp = Instant.now(); // Fixed bug here!
+        this.channel = channel;
+        this.imageBytes = (imageBytes != null) ? imageBytes : new ArrayList<>();
     }
 
     public Instant getTimestamp() {
@@ -50,8 +99,11 @@ public class Message implements Serializable {
         return channel;
     }
 
-    public String getImagePath() {
-        return imagePath;
+    public List<byte[]> getImageBytes() {
+        return imageBytes;
     }
 
+    public void addImageBytes(byte[] bytes) {
+        this.imageBytes.add(bytes);
+    }
 }

@@ -2,6 +2,10 @@ package dat055.group5.export;
 
 import java.util.List;
 
+/**
+ * Container-class for all channel-related data
+ * Can be used to fetch an entire channel including message-history.
+ */
 public class ChannelContent {
 
     Channel channel;

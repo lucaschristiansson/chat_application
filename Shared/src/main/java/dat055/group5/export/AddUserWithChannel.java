@@ -3,6 +3,10 @@ package dat055.group5.export;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * The purpose of this class is to make an object containing both {@link User} objects
+ * and {@link Channel} objects in order to be able to send both in the same {@link NetworkPackage}
+ */
 public class AddUserWithChannel implements Serializable {
     private int channelID;
     private List<String> usernames;

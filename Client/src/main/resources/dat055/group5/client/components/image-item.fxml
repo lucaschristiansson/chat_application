@@ -6,23 +6,27 @@
 <?import javafx.scene.layout.StackPane?>
 
 <StackPane fx:id="parent"
-           prefWidth="100.0" prefHeight="100.0"
-           maxWidth="100.0" maxHeight="100.0"
-           style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 8, 0, 0, 2);"
+           prefWidth="125.0" prefHeight="125.0"
+           maxWidth="125.0" maxHeight="125.0"
+           minWidth="125.0" minHeight="125.0"
+           style="-fx-background-color: rgba(0,0,0,0.08); -fx-background-radius: 12;"
            xmlns="http://javafx.com/javafx/17.0.12"
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="dat055.group5.client.controller.ImageListItemController">
 
     <ImageView fx:id="imgView"
                fitWidth="100.0" fitHeight="100.0"
-               preserveRatio="false" />
+               preserveRatio="true"/>
 
     <Button onAction="#onClose"
             text="X"
             StackPane.alignment="TOP_RIGHT"
-            style="-fx-background-color: #ff4c4c; -fx-text-fill: white; -fx-background-radius: 50; -fx-font-size: 10px; -fx-font-weight: bold; -fx-padding: 3 6 3 6; -fx-cursor: hand;">
-        <StackPane.margin>
-            <Insets top="6.0" right="6.0"/>
-        </StackPane.margin>
+            style="
+                -fx-background-color: red;
+                -fx-text-fill: white;
+                -fx-font-size: 10px;">
+                <StackPane.margin>
+                    <Insets top="6.0" right="6.0"/>
+                </StackPane.margin>
     </Button>
 </StackPane>
