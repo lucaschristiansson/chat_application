@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Converts Channel information from database into {@link NetworkPackage} of specified type
  */
-public class ChannelServerPacker implements ChannelPacker <List<Channel>, List<User>, Channel> {
+public class ChannelServerPacker implements ChannelPacker <List<Channel>, List<String>, Channel> {
     @Override
     public NetworkPackage addChannel(Channel channel) {
         return new NetworkPackage(PackageType.CREATE_CHANNEL, channel);
@@ -31,7 +31,7 @@ public class ChannelServerPacker implements ChannelPacker <List<Channel>, List<U
     }
 
     @Override
-    public NetworkPackage getAllUsersInChannel(List<User> list) {
+    public NetworkPackage getAllUsersInChannel(List<String> list) {
         return new NetworkPackage(PackageType.GET_USER_IN_CHANNEL, list);
     }
 

@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 import java.sql.*;
 import java.util.*;
 
-public class MessageDatabaseManager implements MessageManager {
+public class MessageDatabaseManager implements MessageManager<List<Message>, Integer> {
     private final dat055.group5.Driver driver;
     private final Connection connection;
 
@@ -104,7 +104,7 @@ public class MessageDatabaseManager implements MessageManager {
     }
 
     @Override
-    public List<Message> getMessagesByChannel(int channelId) {
+    public List<Message> getMessagesByChannel(Integer channelId) {
         String query =
                 "SELECT M.message_id, M.message_time, M.username, M.content, I.image_path " +
                         "FROM Messages M " +

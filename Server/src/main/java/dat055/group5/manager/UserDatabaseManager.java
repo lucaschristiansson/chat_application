@@ -26,25 +26,6 @@ public class UserDatabaseManager implements UserManager {
     }
 
     @Override
-    public List<String> getUsers(){
-        String sql = "SELECT username FROM Users";
-
-        List<String> users = new ArrayList<>();
-
-        try(Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery(sql)){
-            while(rs.next()){
-                users.add(rs.getString("username"));
-            }
-
-        } catch (SQLException e) {
-            getError(e);
-            e.printStackTrace();
-        }
-        return users;
-    }
-
-    @Override
     public void addUser(User user){
         String sql = "INSERT INTO Users(username, password) VALUES (?, ?)";
         try(PreparedStatement ps = connection.prepareStatement(sql)){

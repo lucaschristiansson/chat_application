@@ -29,13 +29,10 @@ public class Client {
     private java.util.function.Consumer<Message> messageListener;
 
     /**
-     *
      * @param driver
      * @param addr
      * @param port
      */
-
-
     public Client(Driver driver, String addr, int port) {
         this.driver = driver;
         this.requestManager = driver.getRequestManager();
@@ -58,10 +55,6 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void setMessageListener(java.util.function.Consumer<Message> listener) {
-        this.messageListener = listener;
     }
 
     public final String getUsername(){
@@ -92,12 +85,11 @@ public class Client {
         Message outgoingMessage = new Message(getUsername(), content, getActiveChannel().getChannelID(), imageBytesList);
 
         sendRequestAsync(
-                driver.getMessageClientPacker().addMessage(outgoingMessage),
-                (networkPackage) -> {
-                }
+                driver.getMessageClientPacker().addMessage(outgoingMessage), (networkPackage) ->
+                    driver.getMessageClientManager().addMessage((Message) networkPackage.getData())
         );
     }
-    //TODO NetworkPackages ska flyttas till specifika metoder i Managers
+
     public void sendNetworkPackage(NetworkPackage networkPackage){
         try {
             outputStream.writeObject(networkPackage);
@@ -131,8 +123,8 @@ public class Client {
     }
 
     private class ReadThread implements Runnable {
-        private ObjectInputStream reader;
-        private RequestManager requestManager;
+        private final ObjectInputStream reader;
+        private final RequestManager requestManager;
 
         public ReadThread(ObjectInputStream reader, RequestManager requestManager) {
             this.reader = reader;
@@ -154,59 +146,6 @@ public class Client {
 
                                     }
                                 }
-                            }
-                        }
-
-                        switch (networkPackage.getType()) {
-                            case CREATE_CHANNEL: {
-                                Channel channel = (Channel) networkPackage.getData();
-                                break;
-                            }
-                            case CREATE_USER: {
-                                User user = (User) networkPackage.getData();
-                                break;
-                            }
-                            case CREATE_MESSAGE: {
-                                Message message = (Message) networkPackage.getData();
-                                model.addMessage(message);
-                                break;
-                            }
-                            case ADD_USER_TO_CHANNEL: {
-                                try {
-                                    AddUserWithChannel userData = (AddUserWithChannel) networkPackage.getData();
-                                    for (String username : userData.getUsernames()) {
-
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                break;
-                            }
-                            case REMOVE_USER_FROM_CHANNEL: {
-                                AddUserWithChannel userData = (AddUserWithChannel) networkPackage.getData();
-                                for (String username : userData.getUsernames()) {
-
-                                }
-                                break;
-                            }
-                            case GET_CHANNELS_FOR_USER: {
-                                // Channel channel = (Channel) networkPackage.getData();
-                                // channelClientManager.getChannel(channel);
-                                break;
-                            }
-                            case GET_MESSAGES_BY_CHANNEL: {
-                                List<Message> messages = (List<Message>) networkPackage.getData();
-                                break;
-                            }
-                            case GET_USERS: {
-
-                                break;
-                            }
-                            case LOGIN: {
-
-                                //TODO FIX CLIENT LOGIN
-                                User user = (User) networkPackage.getData();
-                                break;
                             }
                         }
                     }

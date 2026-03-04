@@ -209,16 +209,15 @@ public class Server extends Thread{
                                 break;
                             }
                             case GET_USERS: {
-                                userDatabaseManager.getUsers();
+                                //userDatabaseManager.getUsers();
                                 break;
                             }
 
                             case GET_USER_IN_CHANNEL: {
                                 Integer channelID = (Integer) networkPackage.getData();
-                                NetworkPackage response = new NetworkPackage(
-                                        networkPackage.getID(),
-                                        PackageType.GET_USER_IN_CHANNEL,
-                                        channelDatabaseManager.getAllUsersInChannel(channelID));
+                                NetworkPackage response = driver.getChannelServerPacker().getAllUsersInChannel(
+                                        driver.getChannelDatabaseManager().getAllUsersInChannel(channelID)
+                                );
                                 sendPackage(response);
                                 break;
                             }

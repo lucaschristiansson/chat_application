@@ -8,9 +8,8 @@ import dat055.group5.client.Model.Packer.UserClientPacker;
 import dat055.group5.client.Model.manager.ChannelClientManager;
 import dat055.group5.client.Model.manager.MessageClientManager;
 import dat055.group5.client.Model.manager.UserClientManager;
-import dat055.group5.export.Channel;
-import dat055.group5.export.Message;
-import dat055.group5.export.User;
+
+import java.util.List;
 
 public class Driver {
     private final RequestManager requestManager;
@@ -23,36 +22,15 @@ public class Driver {
     private final UserClientManager userClientManager;
     private final Model model;
 
+    @SuppressWarnings("unchecked")
     public Driver(){
         this.requestManager = new RequestManager();
-        this.model = new Model(new Channel(0, "Channel0"), null); //TODO FETCH!!!!
+        this.model = new Model(null, null); //TODO FETCH!!!!
         this.client = new Client(this, "127.0.0.1", 4000);
         this.channelClientManager = new ChannelClientManager(this);
         this.messageClientManager = new MessageClientManager(this);
-        this.userClientManager = new UserClientManager();
+        this.userClientManager = new UserClientManager(this);
 
-        messageClientManager.getMessagesByChannel(model.getActiveChannel().getChannelID());
-
-    }
-
-
-    public void tests(){
-        Message unverified = new Message("user1", "unverifiedmsg", 1);
-        Message verified = new Message("user1", "verifiedmsg", 1);
-
-
-        client.sendRequestAsync(messageClientPacker.addMessage(unverified), //should not work
-                (networkPackage) -> System.out.println(networkPackage.getData())
-        );
-
-        client.sendRequestAsync(userClientPacker.authenticateUser(new User("user1", "password1")),
-                (networkPackage -> {} ));
-
-        client.sendRequestAsync(messageClientPacker.addMessage(verified), //should work
-                (networkPackage) -> System.out.println(networkPackage.getData())
-        );
-        client.sendRequestAsync(messageClientPacker.getMessagesByChannel(1),
-                (networkPackage) -> System.out.println(networkPackage.getType()));
 
 
     }

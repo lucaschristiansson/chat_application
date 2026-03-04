@@ -8,7 +8,11 @@ import dat055.group5.export.UserManager;
 import java.util.List;
 
 public class UserClientManager implements UserManager {
-    Driver driver;
+    private final Driver driver;
+
+    public UserClientManager(Driver driver){
+        this.driver = driver;
+    }
 
     @Override
     public void addUser(User user) {

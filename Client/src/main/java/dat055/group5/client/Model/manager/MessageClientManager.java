@@ -12,7 +12,7 @@ import javafx.collections.ObservableList;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MessageClientManager implements MessageManager {
+public class MessageClientManager implements MessageManager<Void, List<Message>> {
 
     private final Driver driver;
 
@@ -28,25 +28,11 @@ public class MessageClientManager implements MessageManager {
     }
 
     @Override
-    public List<Message> getMessagesByChannel(int channelId) {
-        driver.getClient().sendRequestAsync(new NetworkPackage(PackageType.GET_MESSAGES_BY_CHANNEL, driver.getModel().getActiveChannel().getChannelID()), (networkPackage) ->{
-            System.out.println(networkPackage.getData());
-            System.out.println("hello!");
-            if(networkPackage.getType() == PackageType.GET_MESSAGES_BY_CHANNEL){
-                try{
-                    if(networkPackage.getData() instanceof List<?> list){
-                        for(Object message : list){
-                            if(message instanceof Message m){
-                                driver.getModel().addMessage(m);
-                            }
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        return List.of();
+    public Void getMessagesByChannel(List<Message> messages) {
+        for(Message message : messages){
+            driver.getModel().addMessage(message);
+        }
+        return null;
     }
 
 }

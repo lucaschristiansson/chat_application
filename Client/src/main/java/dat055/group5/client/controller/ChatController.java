@@ -23,11 +23,11 @@ import javafx.stage.FileChooser;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.List;
+import java.util.logging.Logger;
 
 
 public class ChatController {
     private Client client;
-    private Model model;
     private Driver driver;
 
     @FXML public ListView<Channel> channelList;
@@ -49,13 +49,21 @@ public class ChatController {
     @FXML
     private Label currentChannelLabel;
 
-    public void setModel(Model model) {
-        this.model = model;
-        channelList.setItems(model.getChannels());
-        chatList.setItems(model.getMessages());
-        userList.setItems(model.getUsersInActiveChannel());
-        currentChannelLabel.textProperty().bind(model.getActiveChannelProperty().asString());
-        ObservableList<Message> messages = model.getMessages();
+    @SuppressWarnings("unchecked")
+    public void setDriver(Driver driver) {
+        this.driver = driver;
+        this.client = driver.getClient();
+
+        client.sendRequestAsync(driver.getChannelClientPacker().getAllChannelsForUser(client.getUsername()), (networkPackage) -> {
+            driver.getChannelClientManager().getAllChannelsForUser((List<Channel>) networkPackage.getData());
+        });
+
+        ObservableList<Message> messages = driver.getModel().getMessages();
+
+        channelList.setItems(driver.getModel().getChannels());
+        chatList.setItems(messages);
+        userList.setItems(driver.getModel().getUsersInActiveChannel());
+        currentChannelLabel.textProperty().bind(driver.getModel().getActiveChannelProperty().asString());
 
         messages.addListener((ListChangeListener<Message>) change -> {
             while (change.next()) {
@@ -67,37 +75,6 @@ public class ChatController {
                 }
             }
         });
-    }
-
-    public void setDriver(Driver driver) {
-        this.driver = driver;
-    }
-
-    public void setClient(Client client){
-
-        this.client = client;
-        client.sendRequestAsync(new NetworkPackage(PackageType.GET_CHANNELS_FOR_USER, client.getUsername()), (e) ->{
-            System.out.println(e.getData());
-            if(e.getType() == PackageType.GET_CHANNELS_FOR_USER){
-                try{
-                    if(e.getData() instanceof List<?> list){
-                        List<Channel> channels = (List<Channel>) list;
-                        Platform.runLater(() -> {
-                            for(Channel channel : channels){
-                                channelList.getItems().add(channel);
-                            }
-                        });
-                    }
-                } catch (Exception ex) {
-                    throw new RuntimeException(ex);
-                }
-            }
-        });
-/*      //MARCUS NEW APPROACH::::
-        client.sendRequestAsync(driver.getChannelClientPacker().getAllChannelsForUser(client.getUsername()), (e) ->{
-            driver.getChannelClientManager().addChannel(e.getData());
-        });
-*/
     }
 
     @FXML
@@ -122,33 +99,19 @@ public class ChatController {
 
 
     }
-
+    @SuppressWarnings("unchecked")
     private void onChannelSelected(Channel selectedChannel) {
         System.out.println("User pressed channel: " + selectedChannel.getChannelName());
 
-        //currentChannelLabel.setText(selectedChannel.getChannelName());
-        model.setActiveChannel(selectedChannel);
+        driver.getModel().setActiveChannel(selectedChannel);
 
-        driver.getMessageClientManager().getMessagesByChannel(model.getActiveChannel().getChannelID());
+        client.sendRequestAsync(driver.getMessageClientPacker().getMessagesByChannel(driver.getModel().getActiveChannel().getChannelID()), (networkPackage) ->
+                driver.getMessageClientManager().getMessagesByChannel((List<Message>) networkPackage.getData())
+        );
 
-        //TODO MAKE THIS DO RIGHT THING TOO
-        client.sendRequestAsync(new NetworkPackage(PackageType.GET_USER_IN_CHANNEL, selectedChannel.getChannelID()), (e) ->{
-            System.out.println(e.getData());
-            if(e.getType() == PackageType.GET_USER_IN_CHANNEL){
-                try{
-                    if(e.getData() instanceof List<?> list){
-                        List<String> users = (List<String>) list;
-                        Platform.runLater(() -> {
-                            for(String user : users){
-                                userList.getItems().add(user);
-                            }
-                        });
-                    }
-                } catch (Exception ex) {
-                    throw new RuntimeException(ex);
-                }
-            }
-        });
+        client.sendRequestAsync(driver.getChannelClientPacker().getChannel(selectedChannel.getChannelID().toString()),
+                (networkPackage) -> driver.getChannelClientManager().getAllUsersInChannel((List<String>) networkPackage.getData())
+        );
     }
 
     @FXML
@@ -176,8 +139,6 @@ public class ChatController {
         FileChooser fileChooser = new FileChooser();
         File file = fileChooser.showOpenDialog(((Node) event.getTarget()).getScene().getWindow());
 
-        System.out.println(file);
-
         Image image = new Image(file.toURI().toURL().toExternalForm());
 
         imageList.getItems().add(image);
@@ -195,8 +156,10 @@ public class ChatController {
     }
 
     public void onAddUser(ActionEvent actionEvent) {
+        //TODO
     }
 
     public void onAddChannel(ActionEvent actionEvent) {
+        //TODO
     }
 }

@@ -1,11 +1,7 @@
 package dat055.group5.client.controller;
 
 import dat055.group5.client.Driver;
-import dat055.group5.client.Model.Client;
-import dat055.group5.client.Model.Model;
-import dat055.group5.export.NetworkPackage;
-import dat055.group5.export.PackageType;
-import dat055.group5.export.User;
+import dat055.group5.export.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,10 +14,11 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.List;
 
 public class LoginController {
-
     private Driver driver;
+
     @FXML
     private TextField usernameField;
 
@@ -35,7 +32,7 @@ public class LoginController {
         this.driver = driver;
     }
 
-    @FXML
+    @FXML @SuppressWarnings("unchecked")
     public void onLogin(ActionEvent event) {
         String username = usernameField.getText();
         String password = passwordField.getText();
@@ -52,7 +49,18 @@ public class LoginController {
                 errorLabel.setText("Wrong username or password");
                 return;
             }
+
             driver.getModel().setClientUser(user);
+            //System.out.println(driver.getModel().getClientUser().getUsername());
+            driver.getClient().sendRequestAsync(driver.getChannelClientPacker().getAllChannelsForUser(driver.getModel().getClientUser().getUsername()), networkPackage -> {
+                driver.getChannelClientManager().getAllChannelsForUser((List<Channel>) networkPackage.getData());
+                driver.getModel().setActiveChannel(driver.getModel().getChannels().getFirst());
+                System.out.println("hello, active channel is: " + driver.getModel().getActiveChannel());
+                driver.getClient().sendRequestAsync(driver.getMessageClientPacker().getMessagesByChannel(driver.getModel().getActiveChannel().getChannelID()), (networkPackage2) -> {
+                    driver.getMessageClientManager().getMessagesByChannel((List<Message>) networkPackage2.getData());
+                });
+            });
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/dat055/group5/client/views/chat-view.fxml"));
             Parent chatRoot = loader.load();
 
@@ -63,9 +71,8 @@ public class LoginController {
 
             ChatController chatController = loader.getController();
 
-            chatController.setClient(driver.getClient());
             chatController.setDriver(driver);
-            chatController.setModel(driver.getModel());
+
 
             stage.setScene(chatScene);
             stage.centerOnScreen();
