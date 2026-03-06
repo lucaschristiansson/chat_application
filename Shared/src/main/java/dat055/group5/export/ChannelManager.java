@@ -12,7 +12,7 @@ public interface ChannelManager <C, L, U, R, X>{
      *
      * @param channel
      */
-    void addChannel (C channel);
+    C addChannel (C channel);
 
     /**
      * Adds a user to a specific channel

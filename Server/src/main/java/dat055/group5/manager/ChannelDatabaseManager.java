@@ -4,9 +4,7 @@ import dat055.group5.Driver;
 import dat055.group5.export.Channel;
 import dat055.group5.export.ChannelManager;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,16 +26,20 @@ public class ChannelDatabaseManager implements ChannelManager <Channel, String, 
      * @param channel
      */
     @Override
-    public void addChannel(Channel channel) {
-        String sql = "INSERT INTO Channels (channel_id, channel_name) VALUES (?, ?)";
+    public Channel addChannel(Channel channel) {
+        String sql = "INSERT INTO Channels (channel_name) VALUES (?) RETURNING channel_id";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, channel.getChannelID());
-            ps.setString(2, channel.getChannelName());
-
-            ps.executeUpdate();
+            ps.setString(1, channel.getChannelName());
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    int generatedId = rs.getInt("channel_id");
+                    return new Channel(generatedId, channel.getChannelName());
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     /**
@@ -123,7 +125,20 @@ public class ChannelDatabaseManager implements ChannelManager <Channel, String, 
     }
 
     @Override
-    public void getChannel(Channel channel) {
+    public void getChannel(Channel channel) {}
 
+    public Channel getChannelById(int channelID) {
+        String sql = "SELECT channel_id, channel_name FROM Channels WHERE channel_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, channelID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new Channel(rs.getInt("channel_id"), rs.getString("channel_name"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

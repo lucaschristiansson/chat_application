@@ -1,6 +1,8 @@
 package dat055.group5.manager;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import dat055.group5.Driver;
 import java.sql.Connection;
@@ -67,6 +69,22 @@ public class UserDatabaseManager implements UserManager {
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public List<String> getAllUsers() {
+        String sql = "SELECT username FROM Users";
+        List<String> users = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                users.add(rs.getString("username"));
+            }
+        } catch (SQLException e) {
+            getError(e);
+            e.printStackTrace();
+        }
+        return users;
     }
 
 }

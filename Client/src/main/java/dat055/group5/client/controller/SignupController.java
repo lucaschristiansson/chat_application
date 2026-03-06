@@ -93,6 +93,7 @@ public class SignupController {
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(chatRoot, 900, 600));
+            stage.setTitle(driver.getClient().getUsername());
             stage.centerOnScreen();
             stage.show();
         } catch (IOException e) {

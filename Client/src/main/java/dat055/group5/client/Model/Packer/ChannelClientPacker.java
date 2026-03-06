@@ -33,11 +33,11 @@ public class ChannelClientPacker implements ChannelPacker <String, String, Strin
 
     @Override
     public NetworkPackage getAllUsersInChannel(String channelID) {
-        return new NetworkPackage(PackageType.GET_USER_IN_CHANNEL, channelID);
+        return new NetworkPackage(PackageType.GET_USER_IN_CHANNEL, Integer.parseInt(channelID));
     }
 
     @Override
     public NetworkPackage getChannel(String channelId) {
-        return new NetworkPackage(PackageType.GET_CHANNEL, channelId);
+        return new NetworkPackage(PackageType.GET_CHANNEL, Integer.parseInt(channelId));
     }
 }

@@ -76,6 +76,7 @@ public class LoginController {
             chatController.setDriver(driver);
 
             stage.setScene(chatScene);
+            stage.setTitle(driver.getClient().getUsername());
             stage.centerOnScreen();
             stage.show();
         } catch (IOException e) {

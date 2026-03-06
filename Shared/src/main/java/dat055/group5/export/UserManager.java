@@ -7,7 +7,7 @@ import java.util.List;
  * needed for managing users
  */
 public interface UserManager {
-    //List<String> getUsers(List<String> users);
     boolean addUser(User user);
     boolean authenticateUser(User user);
+    List<String> getAllUsers();
 }

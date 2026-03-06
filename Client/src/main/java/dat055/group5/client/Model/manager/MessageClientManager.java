@@ -1,15 +1,11 @@
 package dat055.group5.client.Model.manager;
 
 import dat055.group5.client.Driver;
-import dat055.group5.client.Model.Model;
+import dat055.group5.export.Channel;
 import dat055.group5.export.Message;
 import dat055.group5.export.MessageManager;
-import dat055.group5.export.NetworkPackage;
-import dat055.group5.export.PackageType;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MessageClientManager implements MessageManager<Void, List<Message>> {
@@ -27,20 +23,21 @@ public class MessageClientManager implements MessageManager<Void, List<Message>>
      */
     @Override
     public boolean addMessage(Message message) {
-        driver.getModel().addMessage(message);
+        Channel activeChannel = driver.getModel().getActiveChannel();
+        if (activeChannel != null && activeChannel.getChannelID().equals(message.getChannel())) {
+            driver.getModel().addMessage(message);
+        }
         return true;
     }
 
     /**
-     * Asynchronus request for all messages in specified channel
-     * @param channelId
-     * @return
+     * Replaces the current message list with the given messages.
+     * @param messages full list of messages for the requested channel
+     * @return null
      */
     @Override
     public Void getMessagesByChannel(List<Message> messages) {
-        for(Message message : messages){
-            driver.getModel().addMessage(message);
-        }
+        driver.getModel().getMessages().setAll(messages);
         return null;
     }
 

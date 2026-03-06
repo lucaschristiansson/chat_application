@@ -158,8 +158,10 @@ public class Server extends Thread{
                         switch (networkPackage.getType()) {
                             case CREATE_CHANNEL: {
                                 Channel channel = (Channel) networkPackage.getData();
-
-                                channelDatabaseManager.addChannel(channel);
+                                Channel created = channelDatabaseManager.addChannel(channel);
+                                NetworkPackage response = new NetworkPackage(
+                                        networkPackage.getID(), PackageType.CREATE_CHANNEL, created);
+                                sendPackage(response);
                                 break;
                             }
                             case CREATE_USER: {
@@ -179,8 +181,19 @@ public class Server extends Thread{
                             case ADD_USER_TO_CHANNEL: {
                                 try {
                                     AddUserWithChannel userData = (AddUserWithChannel) networkPackage.getData();
-                                    for (String username : userData.getUsernames()) {
-                                        channelDatabaseManager.addUserToChannel(username, userData.getChannelID());
+                                    for (String u : userData.getUsernames()) {
+                                        channelDatabaseManager.addUserToChannel(u, userData.getChannelID());
+                                    }
+                                    Channel addedChannel = channelDatabaseManager.getChannelById(userData.getChannelID());
+                                    if (addedChannel != null) {
+                                        NetworkPackage push = new NetworkPackage(PackageType.CHANNEL_ADDED, addedChannel);
+                                        synchronized (server.clients) {
+                                            for (ClientHandler c : server.clients) {
+                                                if (userData.getUsernames().contains(c.username)) {
+                                                    c.sendPackage(push);
+                                                }
+                                            }
+                                        }
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -213,15 +226,20 @@ public class Server extends Thread{
                                 break;
                             }
                             case GET_USERS: {
-                                //userDatabaseManager.getUsers();
+                                NetworkPackage response = new NetworkPackage(
+                                        networkPackage.getID(), PackageType.GET_USERS,
+                                        userDatabaseManager.getAllUsers());
+                                sendPackage(response);
                                 break;
                             }
 
-                            case GET_USER_IN_CHANNEL: {
+                            case GET_USER_IN_CHANNEL:
+                            case GET_CHANNEL: {
                                 Integer channelID = (Integer) networkPackage.getData();
-                                NetworkPackage response = driver.getChannelServerPacker().getAllUsersInChannel(
-                                        driver.getChannelDatabaseManager().getAllUsersInChannel(channelID)
-                                );
+                                NetworkPackage response = new NetworkPackage(
+                                        networkPackage.getID(),
+                                        networkPackage.getType(),
+                                        channelDatabaseManager.getAllUsersInChannel(channelID));
                                 sendPackage(response);
                                 break;
                             }

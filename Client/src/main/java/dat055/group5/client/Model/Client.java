@@ -20,7 +20,6 @@ import java.awt.image.BufferedImage;
  */
 public class Client {
     private final RequestManager requestManager;
-    private final Model model;
     private final Driver driver;
 
     private Socket socket;
@@ -36,7 +35,6 @@ public class Client {
     public Client(Driver driver, String addr, int port) {
         this.driver = driver;
         this.requestManager = driver.getRequestManager();
-        this.model = driver.getModel();
 
         try {
             socket = new Socket(addr, port);
@@ -57,13 +55,6 @@ public class Client {
         }
     }
 
-    public final String getUsername(){
-        return model.getClientUser().getUsername();
-    }
-
-    public Channel getActiveChannel(){
-        return this.model.getActiveChannel();
-    }
 
     public void sendMessagePackage(String content, List<Image> images){
         List<byte[]> imageBytesList = new ArrayList<>();
@@ -82,7 +73,7 @@ public class Client {
             }
         }
 
-        Message outgoingMessage = new Message(getUsername(), content, getActiveChannel().getChannelID(), imageBytesList);
+        Message outgoingMessage = new Message(driver.getModel().getClientUser().getUsername(), content, driver.getModel().getActiveChannel().getChannelID(), imageBytesList);
 
         sendRequestAsync(
                 driver.getMessageClientPacker().addMessage(outgoingMessage), (networkPackage) ->
@@ -140,9 +131,10 @@ public class Client {
 
                         if(!isResponse){
                             switch (networkPackage.getType()){
-                                case PackageType.CREATE_MESSAGE -> {
-                                    driver.getModel().addMessage((Message) networkPackage.getData());
-                                }
+                                case PackageType.CREATE_MESSAGE ->
+                                    driver.getMessageClientManager().addMessage((Message) networkPackage.getData());
+                                case PackageType.CHANNEL_ADDED ->
+                                    driver.getChannelClientManager().addChannel((Channel) networkPackage.getData());
                             }
                         }
                     }
@@ -154,11 +146,3 @@ public class Client {
         }
     }
 }
-
-/**
- * add more javadocs
- * add channels
- *
- *
- * after that we can add functionality for new users
- */

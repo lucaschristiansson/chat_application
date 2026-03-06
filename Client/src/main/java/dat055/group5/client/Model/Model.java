@@ -56,12 +56,12 @@ public class Model {
     }
 
     public void addUserToActiveChannel(String username, int channelId) {
-        if (this.activeChannel.get().getChannelID() == channelId)
+        if (this.activeChannel.get().getChannelID().equals(channelId))
             usersInActiveChannel.add(username);
     }
 
-    public void removeUserfromActiveChannel(String username, int channelId) {
-        if (this.activeChannel.get().getChannelID() == channelId)
+    public void removeUserFromActiveChannel(String username, int channelId) {
+        if (this.activeChannel.get().getChannelID().equals(channelId))
             this.usersInActiveChannel.remove(username);
     }
 
