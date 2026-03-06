@@ -13,8 +13,7 @@ public class ChannelContent {
     List<User> usersInChannel;
 
     public ChannelContent(String channelName, Integer channelId, List <Message> messages, List <User> users) {
-        this.channel.channelName = channelName;
-        this.channel.channelID = channelId;
+        this.channel = new Channel(channelId,channelName);
         this.messages = messages;
         this.usersInChannel = users;
     }

@@ -1,6 +1,5 @@
 package dat055.group5;
 
-import dat055.group5.Packer.MessageServerPacker;
 import dat055.group5.export.*;
 import dat055.group5.manager.*;
 
@@ -47,19 +46,6 @@ public class Server extends Thread{
     }
 
     /**
-     * NO USAGES ??
-     * @param networkPackage
-     */
-    public void broadcast(NetworkPackage networkPackage) {
-        synchronized (clients) {
-            for (ClientHandler client : clients) {
-                client.sendPackage(networkPackage);
-                System.out.println(client);
-            }
-        }
-    }
-
-    /**
      * Sends package to all currently connected clients to handled channel.
      * @param networkPackage the sent object
      * @param channelID Identifier for the handled channel
@@ -94,14 +80,13 @@ public class Server extends Thread{
         System.out.println("Client disconnected.");
     }
 
-
     /**
      * Handles communication with clients, instantiated for each client.
      * Handles incoming packages and validates user against database
      */
     private static class ClientHandler extends Thread {
         private final ObjectInputStream in;
-        private ObjectOutputStream out;
+        private final ObjectOutputStream out;
         private final Socket clientSocket;
         private final Server server;
         private boolean verified = false;
@@ -287,5 +272,4 @@ public class Server extends Thread{
             }
         }
     }
-
 }

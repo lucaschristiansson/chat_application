@@ -8,8 +8,8 @@ import java.util.List;
  * and {@link Channel} objects in order to be able to send both in the same {@link NetworkPackage}
  */
 public class AddUserWithChannel implements Serializable {
-    private int channelID;
-    private List<String> usernames;
+    private final int channelID;
+    private final List<String> usernames;
 
     public AddUserWithChannel(List <String> usernames, int channelID){
         this.usernames=usernames;
