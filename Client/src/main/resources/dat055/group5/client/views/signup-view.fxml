@@ -8,12 +8,12 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" prefHeight="400.0" prefWidth="400.0" spacing="15.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dat055.group5.client.controller.LoginController">
+<VBox alignment="CENTER" prefHeight="450.0" prefWidth="400.0" spacing="15.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dat055.group5.client.controller.SignupController">
     <padding>
         <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
     </padding>
     <children>
-        <Label text="Chat Application">
+        <Label text="Create Account">
             <font>
                 <Font name="JetBrains Mono Bold" size="24.0" />
             </font>
@@ -34,13 +34,19 @@
             </font>
         </PasswordField>
 
-        <Button maxWidth="250.0" mnemonicParsing="false" onAction="#onLogin" prefHeight="35.0" text="LOGIN">
+        <PasswordField fx:id="confirmPasswordField" maxWidth="250.0" prefHeight="35.0" promptText="Confirm Password">
+            <font>
+                <Font name="JetBrains Mono Regular" size="14.0" />
+            </font>
+        </PasswordField>
+
+        <Button maxWidth="250.0" mnemonicParsing="false" onAction="#onSignup" prefHeight="35.0" text="SIGN UP">
             <font>
                 <Font name="JetBrains Mono Bold" size="14.0" />
             </font>
         </Button>
 
-        <Button maxWidth="250.0" mnemonicParsing="false" onAction="#onSignup" prefHeight="35.0" text="Sign Up" style="-fx-background-color: transparent; -fx-underline: true;">
+        <Button maxWidth="250.0" mnemonicParsing="false" onAction="#onBack" prefHeight="35.0" text="Back to Login" style="-fx-background-color: transparent; -fx-underline: true;">
             <font>
                 <Font name="JetBrains Mono Regular" size="12.0" />
             </font>
@@ -53,3 +59,4 @@
         </Label>
     </children>
 </VBox>
+

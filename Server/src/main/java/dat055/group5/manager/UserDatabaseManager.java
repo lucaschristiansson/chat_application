@@ -1,8 +1,6 @@
 package dat055.group5.manager;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 import dat055.group5.Driver;
 import java.sql.Connection;
@@ -29,16 +27,17 @@ public class UserDatabaseManager implements UserManager {
     }
 
     @Override
-    public void addUser(User user){
+    public boolean addUser(User user){
         String sql = "INSERT INTO Users(username, password) VALUES (?, ?)";
         try(PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getPassword());
-
             ps.executeUpdate();
+            return true;
         } catch (SQLException e) {
             getError(e);
             e.printStackTrace();
+            return false;
         }
     }
 

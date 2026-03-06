@@ -151,7 +151,8 @@ public class Server extends Thread{
                     Object obj = in.readObject();
 
                     if (obj instanceof NetworkPackage networkPackage) {
-                        if(!verified && !networkPackage.getType().equals(PackageType.LOGIN)) {
+                        if(!verified && !networkPackage.getType().equals(PackageType.LOGIN)
+                                && !networkPackage.getType().equals(PackageType.CREATE_USER)) {
                             continue;
                         }
                         switch (networkPackage.getType()) {
@@ -163,7 +164,10 @@ public class Server extends Thread{
                             }
                             case CREATE_USER: {
                                 User user = (User) networkPackage.getData();
-                                userDatabaseManager.addUser(user);
+                                boolean success = userDatabaseManager.addUser(user);
+                                NetworkPackage response = new NetworkPackage(
+                                        networkPackage.getID(), PackageType.CREATE_USER, success);
+                                sendPackage(response);
                                 break;
                             }
                             case CREATE_MESSAGE: {

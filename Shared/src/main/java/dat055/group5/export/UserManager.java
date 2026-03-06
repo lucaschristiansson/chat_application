@@ -8,6 +8,6 @@ import java.util.List;
  */
 public interface UserManager {
     //List<String> getUsers(List<String> users);
-    void addUser(User user);
+    boolean addUser(User user);
     boolean authenticateUser(User user);
 }

@@ -15,8 +15,9 @@ public class UserClientManager implements UserManager {
     }
 
     @Override
-    public void addUser(User user) {
+    public boolean addUser(User user) {
         driver.getModel().setClientUser(user);
+        return true;
     }
     @Override
     public boolean authenticateUser(User user) {

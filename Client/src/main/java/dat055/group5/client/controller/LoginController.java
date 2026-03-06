@@ -45,46 +45,61 @@ public class LoginController {
         try {
             User user = new User(username, password);
             NetworkPackage request = driver.getClient().sendRequestBlocking(PackageType.LOGIN, user);
-            if(request == null || !(boolean)request.getData()){
+            if (request == null || !(boolean) request.getData()) {
                 errorLabel.setText("Wrong username or password");
                 return;
             }
-            //welcome to the new syntax :)
+
             driver.getModel().setClientUser(user);
             driver.getClient().sendRequestAsync(
                     driver.getChannelClientPacker().getAllChannelsForUser(
                             driver.getModel().getClientUser().getUsername()),
-                            networkPackage -> {
+                    networkPackage -> {
                         driver.getChannelClientManager().getAllChannelsForUser((List<Channel>) networkPackage.getData());
                         driver.getModel().setActiveChannel(driver.getModel().getChannels().getFirst());
 
                         driver.getClient().sendRequestAsync(
                                 driver.getMessageClientPacker().getMessagesByChannel(
-                                        driver.getModel().getActiveChannel().getChannelID()), (networkPackage2) ->
-                            driver.getMessageClientManager().getMessagesByChannel((List<Message>) networkPackage2.getData())
+                                        driver.getModel().getActiveChannel().getChannelID()),
+                                networkPackage2 -> driver.getMessageClientManager()
+                                        .getMessagesByChannel((List<Message>) networkPackage2.getData())
                         );
-            });
+                    });
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/dat055/group5/client/views/chat-view.fxml"));
             Parent chatRoot = loader.load();
 
-
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
             Scene chatScene = new Scene(chatRoot, 900, 600);
 
             ChatController chatController = loader.getController();
-
             chatController.setDriver(driver);
-
 
             stage.setScene(chatScene);
             stage.centerOnScreen();
             stage.show();
-
         } catch (IOException e) {
             e.printStackTrace();
             errorLabel.setText("Error loading the chat interface.");
+        }
+    }
+
+    @FXML
+    public void onSignup(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/dat055/group5/client/views/signup-view.fxml"));
+            Parent signupRoot = loader.load();
+
+            SignupController signupController = loader.getController();
+            signupController.setDriver(driver);
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(signupRoot, 400, 450));
+            stage.centerOnScreen();
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            errorLabel.setText("Error loading the sign up interface.");
         }
     }
 }
