@@ -113,6 +113,10 @@ public class Client {
         }
     }
 
+    public String getUsername() {
+        return driver.getModel().getClientUser().getUsername();
+    }
+
     private class ReadThread implements Runnable {
         private final ObjectInputStream reader;
         private final RequestManager requestManager;

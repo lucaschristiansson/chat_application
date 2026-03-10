@@ -76,7 +76,9 @@ public class Model {
     }
 
     public void setUsersInActiveChannel (ObservableList<String> usersInActiveChannel) {
-        this.usersInActiveChannel.setAll(usersInActiveChannel);
+        Platform.runLater(() -> {
+            this.usersInActiveChannel.setAll(usersInActiveChannel);
+        });
     }
 
     public ObservableList<Message> getMessages() {

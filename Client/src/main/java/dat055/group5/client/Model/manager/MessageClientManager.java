@@ -5,6 +5,7 @@ import dat055.group5.export.Channel;
 import dat055.group5.export.Message;
 import dat055.group5.export.MessageManager;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 
 import java.util.List;
 
@@ -37,7 +38,9 @@ public class MessageClientManager implements MessageManager<Void, List<Message>>
      */
     @Override
     public Void getMessagesByChannel(List<Message> messages) {
-        driver.getModel().getMessages().setAll(messages);
+        Platform.runLater(() -> {
+            driver.getModel().getMessages().setAll(FXCollections.observableArrayList(messages));
+        });
         return null;
     }
 

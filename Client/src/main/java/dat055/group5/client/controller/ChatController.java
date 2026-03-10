@@ -59,7 +59,7 @@ public class ChatController {
         this.driver = driver;
         this.client = driver.getClient();
 
-        client.sendRequestAsync(driver.getChannelClientPacker().getAllChannelsForUser(client.getUsername()), (networkPackage) -> {
+        client.sendRequestAsync(driver.getChannelClientPacker().getAllChannelsForUser(driver.getModel().getClientUser().getUsername()), (networkPackage) -> {
             driver.getChannelClientManager().getAllChannelsForUser((List<Channel>) networkPackage.getData());
         });
 
@@ -110,7 +110,7 @@ public class ChatController {
 
         driver.getModel().setActiveChannel(selectedChannel);
 
-        client.sendRequestAsync(driver.getMessageClientPacker().getMessagesByChannel(driver.getModel().getActiveChannel().getChannelID()), (networkPackage) ->
+        client.sendRequestAsync(driver.getMessageClientPacker().getMessagesByChannel(selectedChannel.getChannelID()), (networkPackage) ->
                 driver.getMessageClientManager().getMessagesByChannel((List<Message>) networkPackage.getData())
         );
 
@@ -118,7 +118,7 @@ public class ChatController {
                 (networkPackage) -> driver.getChannelClientManager().getAllUsersInChannel((List<String>) networkPackage.getData())
         );
     }
-
+//(driver.getModel().getActiveChannel().getChannelID())
     @FXML
     public void onToggleChannels(ActionEvent event) {
         if (mainSplitPane.getItems().contains(channelsVBox)) {
