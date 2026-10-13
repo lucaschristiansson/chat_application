@@ -1,28 +1,68 @@
-Project for Object Oriented Applications course at Chalmers technical university. Developed by @marakerl @auniquee @lucaschristiansson @Eweh4 @Metterklus1
-About
-Chat Application is a project aiming to create a scalable and well-designed application in Java. We always aimed to have proper design following as many object oriented design patterns as reasonable. Adding new features to the project is easy due to the extendable design. 
-The result is an application where you can chat in different channels, have different accounts and add new channels.
-The program has the following functionality:
-Browse chat instances
-Connect to a chat.
-View a persistent chat history.
-Send a text message.
-Send an image.
-Receive new text messages or images when sent from other users.
-See and hide list of available channels
-See and hide list of users in channel
-See which user sent which message or image.
+# Chat Application
 
+A multi-threaded client-server chat application written in Java, built for the **Object Oriented Applications** course at Chalmers University of Technology.
 
-*User manual*
-Docker setup
-In order to run the docker-compose file the user must have docker desktop (windows) or docker/docker-compose (linux) installed on their PC. 
-To start the docker container that houses the database the user will need to navigate to the directory containing the docker compose file, which is the server package in the program, and type “docker compose up” in their terminal. 
-This starts the database at the preselected port.
-If the user wishes to change the port of the database they would need to change the port in the docker-compose.yml file, in the ports section. 
-Ports are written in a specified format: xxxx:xxxx where the first number is the local port that needs to be changed. In order for the server to function the port would also need to be changed in the PortalConnection class to correspond to the newly selected port. 
-This is changed in the getDB method.
+**Developed by:** [@marakerl](https://github.com/marakerl) · [@auniquee](https://github.com/auniquee) · [@lucaschristiansson](https://github.com/lucaschristiansson) · [@Eweh4](https://github.com/Eweh4) · [@Metterklus1](https://github.com/Metterklus1)
 
-Rest of the setup
-To start the server once the SQL database is running the main method in the Main class on the server side needs to run. 
-To run the client the main method of the Launcher class is started, if the server and client are on the same network the connection should be established automatically. 
+---
+
+## About
+
+The goal of the project was to build a scalable, well-designed chat application in Java. Throughout development we applied object-oriented design patterns wherever they made sense, which keeps the codebase modular and makes new features straightforward to add.
+
+Users can create accounts, chat in multiple channels, and create new channels. Messages and images are delivered in real time and stored persistently.
+
+### Features
+
+- Browse available chat channels
+- Connect to a chat channel
+- View persistent chat history
+- Send text messages and images
+- Receive messages and images from other users in real time
+- Show or hide the list of available channels
+- Show or hide the list of users in a channel
+- See which user sent each message or image
+
+### Tech stack
+
+| Area | Technology |
+|------|------------|
+| Client UI | JavaFX (designed in Figma) |
+| Networking | Java Sockets, multi-threaded server |
+| Database | PostgreSQL (3NF-normalized schema) |
+| Infrastructure | Docker / Docker Compose |
+
+---
+
+## Getting started
+
+### Prerequisites
+
+- Java (JDK)
+- **Windows/macOS:** Docker Desktop
+- **Linux:** `docker` and `docker-compose`
+
+### 1. Start the database
+
+The PostgreSQL database runs in a Docker container. From the **server** package (the directory containing `docker-compose.yml`), run:
+
+```bash
+docker compose up
+```
+
+This starts the database on the preconfigured port.
+
+#### Changing the database port (optional)
+
+1. In `docker-compose.yml`, edit the `ports` section. Ports use the format `HOST:CONTAINER` — change the **first** number (the local port).
+2. Update the port in the `getDB` method of the `PortalConnection` class so the server connects to the new port.
+
+### 2. Start the server
+
+With the database running, run the `main` method in the server's `Main` class.
+
+### 3. Start the client
+
+Run the `main` method in the `Launcher` class. If the client and server are on the same network, the connection is established automatically.
+
+You can launch several clients to chat between multiple users.
